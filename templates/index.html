@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Analyzer</title>
+</head>
+<body>
+    <h1>Analizador de ventas</h1>
+    <p>Sube tu archivo Excel o CSV para generar tu informe</p>
+    
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="archivo" accept=".xlsx, .csv">
+        <button type="submit">Analizar</button>
+    </form>
+</body>
+</html>
