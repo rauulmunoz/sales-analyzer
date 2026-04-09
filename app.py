@@ -12,9 +12,8 @@ def index():
 def upload():
     archivo = request.files['archivo']
     df =pd.read_csv(archivo)
-    filas = len(df)
     columnas = list(df.columns)
-    return f'Filas: {filas} | Columnas: {columnas}'
+    return render_template('mapeo.html', columnas = columnas)
 
 if __name__=='__main__':
     app.run(debug=True)

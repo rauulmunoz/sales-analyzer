@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mapeo de columnas</title>
+</head>
+<body>
+    <h1>Asigna tus columnmas</h1>
+    <p>Indica qué representa cada columna de tu archivo</p>
+
+    <form action="/analizar" method="POST">
+        {% for columna in columnas %}
+        <div>
+            <label>{{ columna }}</label>
+            <select name="{{ columna }}">
+                <option value= "ignorar">Ignorar</option>
+                <option value = "fecha">Fecha</option>
+                <option value = "producto">Producto</option>
+                <option value = "cantidad">Cantidad</option>
+                <option value = "precio">Precio</option>
+            </select>
+        </div>
+        {% endfor %}
+
+        <button type="submit">Generar informe</button>
+    </form>
+    
+</body>
+</html>
