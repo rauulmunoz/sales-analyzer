@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt 
+import io 
+import base64
 
 app = Flask(__name__)
 
@@ -30,7 +35,27 @@ def analizar():
     columnas_utiles = {col: mapeo[col] for col in mapeo if mapeo[col] != 'ignorar'}
     df = df[list(columnas_utiles.keys())].rename(columns = columnas_utiles)
 
-    return df.to_html()
+    #convertir fecha y agrupar por mes
+    df['fecha'] = pd.to_datetime(df['fecha'])
+    df['mes'] = df['fecha'].dt.to_period('M')
+    ventas_mes = df.groupby('mes')['precio'].sum()
+
+    #generar gráfica
+    plt.figure(figsize=(10,5))
+    ventas_mes.plot(kind='bar')
+    plt.title('Ventas por mes')
+    plt.xlabel('Mes')
+    plt.ylabel('Total ventas')
+    plt.tight_layout()
+
+    #convertir gráfica a imagen
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    grafica = base64.b64encode(img.getvalue()).decode()
+    plt.close()
+
+    return render_template('resultado.html', grafica = grafica)
 
 if __name__=='__main__':
     app.run(debug=True)
