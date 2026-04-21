@@ -1,31 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Mapeo de columnas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Asigna tus columnmas</h1>
-    <p>Indica qué representa cada columna de tu archivo</p>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card p-4 shadow">
+            <h1 class="mb-3">🗂️ Asigna tus columnas</h1>
+            <p class="text-muted">Indica qué representa cada columna de tu archivo</p>
 
-    <form action="/analizar" method="POST">
-        {% for columna in columnas %}
-        <div>
-            <label>{{ columna }}</label>
-            <select name="{{ columna }}">
-                <option value= "ignorar">Ignorar</option>
-                <option value = "fecha">Fecha</option>
-                <option value = "producto">Producto</option>
-                <option value = "cantidad">Cantidad</option>
-                <option value = "precio">Precio</option>
-            </select>
+            <form action="/analizar" method="POST">
+                <input type="hidden" name="ruta" value="{{ ruta }}">
+
+                {% for columna in columnas %}
+                <div class="mb-3">
+                    <label class="form-label">{{ columna }}</label>
+                    <select name="{{ columna }}" class="form-select">
+                        <option value="ignorar">Ignorar</option>
+                        <option value="fecha">Fecha</option>
+                        <option value="producto">Producto</option>
+                        <option value="cantidad">Cantidad</option>
+                        <option value="precio">Precio</option>
+                    </select>
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary">Generar informe</button>
+            </form>
         </div>
-        {% endfor %}
-
-        <input type = "hidden" name = "ruta" value = "{{ruta}}">
-
-        <button type="submit">Generar informe</button>
-    </form>
-    
+    </div>
 </body>
 </html>
