@@ -80,7 +80,21 @@ def analizar():
     grafica2 = base64.b64encode(img2.getvalue()).decode()
     plt.close()
 
-    return render_template('resultado.html', grafica = grafica, grafica2 = grafica2)
+    #Resumen
+    total_ventas = df['precio'].sum()
+    mejor_mes = ventas_mes.idxmax()
+    mejor_producto = ventas_producto.idxmax()
+    peor_mes = ventas_mes.idxmin()
+    peor_producto = ventas_producto.idxmin()
+
+    return render_template('resultado.html',
+        grafica = grafica,
+        grafica2 = grafica2,
+        total_ventas = total_ventas,
+        mejor_mes = mejor_mes,
+        mejor_producto = mejor_producto,
+        peor_mes = peor_mes,
+        peor_producto = peor_producto)
 
 if __name__=='__main__':
     app.run(debug=True)

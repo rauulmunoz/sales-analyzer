@@ -13,6 +13,42 @@
             <p class = "text-muted">Resultados generados automáticamente</p>
         </div>
 
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card p-3 shadow text-center">
+                    <h6 class="text-muted">💰 Total ventas</h6>
+                    <h3>{{ "%.2f"|format(total_ventas) }} €</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow text-center">
+                    <h6 class="text-muted">📅 Mejor mes</h6>
+                    <h3>{{ mejor_mes }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow text-center">
+                    <h6 class="text-muted">🏆 Mejor producto</h6>
+                    <h3>{{ mejor_producto }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card p-3 shadow text-center">
+                    <h6 class="text-muted">📉 Peor mes</h6>
+                    <h3>{{ peor_mes }}</h3>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card p-3 shadow text-center">
+                    <h6 class="text-muted">⚠️ Peor producto</h6>
+                    <h3>{{ peor_producto }}</h3>
+                </div>
+            </div>
+        </div>
+
         <div class = "card p-4 shadow mb-4">
             <h2 class = "mb-3">Ventas por mes</h2>
             <img src = "data:image/png;base64,{{grafica}}" class = "img-fluid" alt = "Gráfica de ventas por mes">          
