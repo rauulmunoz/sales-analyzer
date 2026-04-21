@@ -40,7 +40,7 @@ def analizar():
     df['mes'] = df['fecha'].dt.to_period('M')
     ventas_mes = df.groupby('mes')['precio'].sum()
 
-    #generar gráfica
+    #Gráfica ventas por mes
     plt.figure(figsize=(10,5))
     ventas_mes.plot(kind='bar')
     plt.title('Ventas por mes')
@@ -55,7 +55,24 @@ def analizar():
     grafica = base64.b64encode(img.getvalue()).decode()
     plt.close()
 
-    return render_template('resultado.html', grafica = grafica)
+
+    #Grafica ventas por producto
+    ventas_producto = df.groupby('producto')['precio'].sum().sort_values(ascending=False)
+
+    plt.figure(figsize=(10,5))
+    ventas_producto.plot(kind='bar')
+    plt.title('Ventas por producto')
+    plt.xlabel('Producto')
+    plt.ylabel('Total ventas')
+    plt.tight_layout()
+
+    img2 = io.BytesIO()
+    plt.savefig(img2, format='png')
+    img.seek(0)
+    grafica2 = base64.b64encode(img2.getvalue()).decode()
+    plt.close()
+
+    return render_template('resultado.html', grafica = grafica, grafica2 = grafica2)
 
 if __name__=='__main__':
     app.run(debug=True)
