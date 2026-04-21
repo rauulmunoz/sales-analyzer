@@ -17,14 +17,23 @@ def upload():
     archivo = request.files['archivo']
     ruta = 'uploads/' + archivo.filename
     archivo.save(ruta)
-    df =pd.read_csv(ruta)
+
+    if archivo.filename.endswith('.csv'):
+        df = pd.read_csv(ruta)
+    else:
+        df = pd.read_excel(ruta)
+
     columnas = list(df.columns)
     return render_template('mapeo.html', columnas = columnas, ruta = ruta)
 
 @app.route('/analizar', methods=['POST'])
 def analizar():
     ruta = request.form['ruta']
-    df = pd.read_csv(ruta)
+
+    if ruta.endswith('.csv'):
+        df = pd.read_csv(ruta)
+    else:
+        df = pd.read_excel(ruta)
 
     mapeo = {}
     for columna in df.columns:
