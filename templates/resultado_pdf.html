@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Helvetica, sans-serif; padding: 30px; background: #f8f9fa; }
+        h1 { font-size: 24px; margin-bottom: 5px; }
+        p { color: #666; margin-top: 0; }
+        .tarjetas { display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
+        .tarjeta { flex: 1; min-width: 140px; background: white; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #ddd; }
+        .tarjeta h6 { color: #888; font-size: 12px; margin-bottom: 8px; }
+        .tarjeta h3 { font-size: 18px; margin: 0; }
+        .grafica { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #ddd; }
+        .grafica h2 { font-size: 16px; margin-bottom: 15px; }
+        .grafica img { width: 100%; }
+    </style>
+</head>
+<body>
+    <h1>📈 Informe de ventas</h1>
+    <p>Resultados generados automáticamente</p>
+
+    <div class="tarjetas">
+        <div class="tarjeta">
+            <h6>💰 Total ventas</h6>
+            <h3>{{ "%.2f"|format(total_ventas) }} €</h3>
+        </div>
+        <div class="tarjeta">
+            <h6>📅 Mejor mes</h6>
+            <h3>{{ mejor_mes }}</h3>
+        </div>
+        <div class="tarjeta">
+            <h6>🏆 Mejor producto</h6>
+            <h3>{{ mejor_producto }}</h3>
+        </div>
+        <div class="tarjeta">
+            <h6>📉 Peor mes</h6>
+            <h3>{{ peor_mes }}</h3>
+        </div>
+        <div class="tarjeta">
+            <h6>⚠️ Peor producto</h6>
+            <h3>{{ peor_producto }}</h3>
+        </div>
+    </div>
+
+    <div class="grafica">
+        <h2>Ventas por mes</h2>
+        <img src="uploads/grafica_mes.png">
+    </div>
+
+    <div class="grafica">
+        <h2>Ventas por producto</h2>
+        <img src="uploads/grafica_producto.png">
+    </div>
+</body>
+</html>

@@ -59,6 +59,15 @@
             <img src = "data:image/png;base64,{{grafica2}}" class = "img-fluid" alt = "Gráfica de ventas por producto">
         </div>
 
+        <form action = "/exportar" method = "POST" style = "display:inline">
+            <input type="hidden" name="total_ventas" value = "{{total_ventas}}">
+            <input type="hidden" name="mejor_mes" value = "{{mejor_mes}}">
+            <input type="hidden" name ="mejor_producto" value = "{{mejor_producto}}">
+            <input type="hidden" name ="peor_mes" value = "{{peor_mes}}">
+            <input type="hidden" name = "peor_producto" value = "{{peor_producto}}">
+            <button type="submit" class="btn btn-success me-2">📄 Exportar PDF</button>
+        </form>
+
         <a href="/" class = "btn btn-secondary">Analizar otro archivo</a>
     </div>
 </body>
