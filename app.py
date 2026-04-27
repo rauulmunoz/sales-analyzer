@@ -16,6 +16,10 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', "pechugadepollo")
 
 @app.route('/')
+def landing():
+    return render_template('landing.html')
+
+@app.route('/')
 def index():
     return render_template('index.html')
 
