@@ -19,16 +19,30 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload():
     archivo = request.files['archivo']
-    ruta = 'uploads/' + archivo.filename
-    archivo.save(ruta)
 
-    if archivo.filename.endswith('.csv'):
-        df = pd.read_csv(ruta)
-    else:
-        df = pd.read_excel(ruta)
+    filename = archivo.filename
 
-    columnas = list(df.columns)
-    return render_template('mapeo.html', columnas = columnas, ruta = ruta)
+    if filename == '':
+        return render_template('index.html', error = 'Por favor selecciona un archivo antes de continuar')
+
+    if not (filename.endswith('.csv') or filename.endswith('.xlsx')):
+        return render_template('index.html', error = 'Solo se admiten archivos CSV o Excel')
+
+    try:
+        ruta = 'uploads/' + filename
+        archivo.save(ruta)
+
+        if filename.endswith('.csv'):
+            df = pd.read_csv(ruta)
+        else:
+            df = pd.read_excel(ruta)
+
+        columnas = list(df.columns)
+        return render_template('mapeo.html', columnas = columnas, ruta = ruta)
+
+    except Exception as e:
+        return render_template('index.html', error = f'Error: {str(e)}')
+
 
 @app.route('/analizar', methods=['POST'])
 def analizar():
@@ -45,6 +59,17 @@ def analizar():
 
     #Renombrar columnas según el mapeo
     columnas_utiles = {col: mapeo[col] for col in mapeo if mapeo[col] != 'ignorar'}
+
+    campos_requeridos = ['fecha', 'precio', 'producto']
+    campos_asignados = list(columnas_utiles.values())
+    
+    for campo in campos_requeridos:
+        if campo not in campos_asignados:
+            return render_template('mapeo.html', 
+                columnas=list(df.columns), 
+                ruta=ruta, 
+                error=f'Debes asignar al menos una columna como "{campo}"')
+                
     df = df[list(columnas_utiles.keys())].rename(columns = columnas_utiles)
 
     #convertir fecha y agrupar por mes
