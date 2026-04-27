@@ -9,8 +9,11 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from flask import send_file
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', "pechugadepollo")
 
 @app.route('/')
 def index():
@@ -29,7 +32,8 @@ def upload():
         return render_template('index.html', error = 'Solo se admiten archivos CSV o Excel')
 
     try:
-        ruta = 'uploads/' + filename
+        filename = secure_filename(filename)
+        ruta = 'uploads/' +filename
         archivo.save(ruta)
 
         if filename.endswith('.csv'):
