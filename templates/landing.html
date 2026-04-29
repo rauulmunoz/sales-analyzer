@@ -1,85 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sales Analyzer - Analiza tus ventas en segundos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Analyzer — Analiza tus ventas en segundos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
     <style>
-        .hero { background: #0d6efd; color: white; padding: 80px 0;  }
-        .feature-icon {font-size: 2.5rem; margin-bottom: 15px }
-        .ejemplo-img {border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
+        /* ── Dark Hero ─────────────────────────────────────── */
+        .hero {
+            background-color: #0f172a;
+            background-image:
+                linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+            background-size: 36px 36px;
+            padding: 5.5rem 0 5rem;
+            color: #fff;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 560px; height: 560px;
+            background: radial-gradient(circle, rgba(217,119,6,.22) 0%, transparent 65%);
+            top: -180px; right: 4%;
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 420px; height: 420px;
+            background: radial-gradient(circle, rgba(59,130,246,.14) 0%, transparent 65%);
+            bottom: -140px; left: 4%;
+            pointer-events: none;
+        }
+        .hero__eyebrow {
+            display: inline-block;
+            background: rgba(217,119,6,.14);
+            color: #FBBF24;
+            border: 1px solid rgba(217,119,6,.3);
+            border-radius: 99px;
+            padding: .35rem 1.125rem;
+            font-size: .8125rem;
+            font-weight: 600;
+            letter-spacing: .04em;
+            margin-bottom: 1.625rem;
+        }
+        .hero h1 { font-size: clamp(2.375rem, 5.5vw, 3.5rem); margin-bottom: 1.375rem; color: #fff; }
+        .hero h1 .accent-text {
+            background: linear-gradient(90deg, #FBBF24 0%, #F59E0B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero .lead { font-size: 1.0625rem; color: rgba(255,255,255,.72); max-width: 520px; margin: 0 auto 2.25rem; line-height: 1.7; }
+        .trust-badge { color: rgba(255,255,255,.58); }
 
+        /* ── Bento Grid ─────────────────────────────────────── */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
+        }
+        .bento-card {
+            background: #fff;
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 1.875rem;
+            box-shadow: var(--shadow-card);
+        }
+        .bento-card--step1 { grid-column: 1; grid-row: 1; }
+        .bento-card--step2 { grid-column: 1; grid-row: 2; }
+        .bento-card--step3 { grid-column: 2; grid-row: 1 / 3; display: flex; flex-direction: column; }
+        @media (max-width: 767px) {
+            .bento-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .bento-card--step3 { grid-column: 1; grid-row: auto; }
+        }
+        .bento-step-num {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            width: 30px; height: 30px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            border-radius: 7px;
+            font-size: .8125rem; font-weight: 800;
+            margin-bottom: .875rem;
+        }
+
+        /* ── Mock Report Preview ────────────────────────────── */
+        .mock-report {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            padding: 1rem 1.125rem;
+            flex: 1;
+            margin-top: 1.25rem;
+            pointer-events: none;
+            user-select: none;
+        }
+        .mock-report__title {
+            font-size: .6875rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .07em;
+            color: var(--color-text-muted); margin-bottom: .75rem;
+        }
+        .mock-kpis { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: .875rem; }
+        .mock-kpi {
+            padding: .3rem .6rem; border-radius: 6px;
+            font-size: .6875rem; font-weight: 700; line-height: 1.4;
+        }
+        .mk-blue  { background: #EFF6FF; color: var(--color-primary); }
+        .mk-green { background: #F0FDF4; color: var(--color-success); }
+        .mk-amber { background: #FFFBEB; color: var(--color-accent); }
+        .mock-chart-wrap {
+            background: #fff; border: 1px solid var(--color-border);
+            border-radius: 8px; padding: .875rem .875rem .625rem; margin-bottom: .875rem;
+        }
+        .mock-chart-lbl { font-size: .6875rem; color: var(--color-text-muted); font-weight: 600; margin-bottom: .5rem; }
+        .mock-bars { display: flex; align-items: flex-end; gap: .375rem; height: 56px; }
+        .mock-bar { flex: 1; background: var(--color-primary); border-radius: 3px 3px 0 0; opacity: .65; }
+        .mock-export {
+            display: inline-flex; align-items: center; gap: .375rem;
+            background: var(--color-success); color: #fff;
+            padding: .375rem .875rem; border-radius: 7px;
+            font-size: .75rem; font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
+    <!-- Navbar -->
+    <nav class="sa-nav">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a class="sa-nav__brand" href="/">
+                <svg class="sa-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
+                </svg>
+                Sales Analyzer
+            </a>
+            <a href="/app" class="btn-sa btn-sa--primary" style="font-size:.875rem;padding:.5rem 1.125rem;">
+                Empezar gratis
+                <svg class="sa-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
     <!-- Hero -->
-     <div class = "hero text-center">
-        <div class = "container">
-            <h1 class = "display-4 fw-bold">📊 Sales Analyzer</h1>
-            <p class = "lead mt-3">Sube tu Excel o CSV y obtén un informe visual de tus ventas en segundos.<br>Sin conocimientos técnicos. Sin configuración.</p>
-            <a href = "/app" class = "btn btn-light btn-lg mt-4 px-5">Pruébalo gratis →</a>
-        </div>
-     </div>
-
-     <!-- Para quién es-->
-     <div class = "container text-center py-5">
-        <h2 class = "mb-5">¿Para quién es?</h2>
-        <div class = "row g-4">
-            <div class = "col-md-4">
-                <div class = "card h-100 p-4 shadow-sm">
-                    <div class = "feature-icon">🏪</div>
-                    <h5>Pequeños negocios</h5>
-                    <p class = "text-muted">Tiendas, restaurantes y comercios que llevan sus ventas en Excel y quieren entender sus datos sin complicaciones.</p>
-                </div>
-            </div>
-            <div class = "col-md-4">
-                <div class = "card h-100 p-4 shadow-sm">
-                    <div class = "feature-icon">🧑‍💼</div>
-                    <h5>Autónomos</h5>
-                    <p class = "text-muted">Freelances y autónomos que necesitan un informe rápido de sus ingresos para su gestor o para tomar decisiones.</p>
-                </div>
-            </div>
-            <div class = "col-md-4">
-                <div class = "card h-100 p-4 shadow-sm">
-                    <div class = "feature-icon">📈</div>
-                    <h5>Equipos de ventas</h5>
-                    <p class = "text-muted">Comerciales que quieren visualizar su rendimiento mensual sin depender del departamento de IT.</p>
-                </div>
+    <section class="hero">
+        <div class="container" style="position:relative;z-index:1;">
+            <div class="hero__eyebrow">Sin registro &middot; Sin instalación &middot; 100% gratis</div>
+            <h1>Convierte tus datos<br>en <span class="accent-text">decisiones</span></h1>
+            <p class="lead">
+                Sube tu Excel o CSV y obtén gráficas, métricas clave<br>
+                e informe PDF al instante. Sin conocimientos técnicos.
+            </p>
+            <a href="/app" class="btn-sa btn-sa--accent">
+                Analizar mis ventas ahora
+                <svg class="sa-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+                </svg>
+            </a>
+            <div class="trust-badges">
+                <span class="trust-badge">
+                    <svg class="sa-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                    Excel y CSV
+                </span>
+                <span class="trust-badge">
+                    <svg class="sa-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                    PDF descargable
+                </span>
+                <span class="trust-badge">
+                    <svg class="sa-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                    Listo en &lt;60 segundos
+                </span>
             </div>
         </div>
-     </div>
+    </section>
 
-     <!-- Cómo funciona-->
-      <div class = "bg-light py-5">
-        <div class = "container text-center">
-            <h2 class = "mb-5">¿Cómo funciona?</h2>
-            <div class = "row g-4">
-                <div class = "col-md-4">
-                    <div class = "display-6">1️⃣</div>
-                    <h5 class = "mt-3">Sube tu archivo</h5>
-                    <p class = "text-muted">Excel o CSV, como lo tengas. No hace falta ningún formato especial.</p>
+    <!-- Para quién es -->
+    <section class="l-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="l-eyebrow">Audiencia</span>
+                <h2 class="l-title">¿Para quién es Sales Analyzer?</h2>
+                <p class="text-muted mx-auto" style="max-width:500px;font-size:.9375rem;">Para quienes llevan sus ventas en una hoja de cálculo y quieren visualizarlas sin complicaciones técnicas.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrap" aria-hidden="true">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"/>
+                            </svg>
+                        </div>
+                        <h5 class="mb-2">Pequeños negocios</h5>
+                        <p class="text-muted mb-0" style="font-size:.9375rem;line-height:1.65;">Tiendas, restaurantes y comercios que llevan sus ventas en Excel y quieren entender sus datos sin complicaciones.</p>
+                    </div>
                 </div>
-                <div class = "col-md-4">
-                    <div class = "display-6">2️⃣</div>
-                    <h5 class = "mt-3">Asigna tus columnas</h5>
-                    <p class = "text-muted">Indica cuál es la fecha, el producto y el precio. Tarda 30 segundos.</p>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrap" aria-hidden="true">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z"/>
+                            </svg>
+                        </div>
+                        <h5 class="mb-2">Autónomos</h5>
+                        <p class="text-muted mb-0" style="font-size:.9375rem;line-height:1.65;">Freelances y autónomos que necesitan un informe rápido de sus ingresos para su gestor o para tomar decisiones.</p>
+                    </div>
                 </div>
-                <div class = "col-md-4">
-                    <div class = "display-6">3️⃣</div>
-                    <h5 class = "mt-3"> Obtén tu informe</h5>
-                    <p class = "text-muted">Gráficas, resumen y PDF listo para descargar o compartir.</p>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrap" aria-hidden="true">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
+                            </svg>
+                        </div>
+                        <h5 class="mb-2">Equipos de ventas</h5>
+                        <p class="text-muted mb-0" style="font-size:.9375rem;line-height:1.65;">Comerciales que quieren visualizar su rendimiento mensual sin depender del departamento de IT.</p>
+                    </div>
                 </div>
             </div>
         </div>
-      </div>
+    </section>
 
-      <!-- CTA final-->
-       <div class = "text-center py-5">
-        <h2>¿Listo para analizar tus ventas?</h2>
-        <p class = "text-muted">Gratis. Sin registro. Sin límites.</p>
-        <a href = "/app" class = "btn btn-primary btn-lg px-5 mt-2">Empezar ahora →</a>
-       </div>
-    
+    <!-- Cómo funciona — Bento Grid -->
+    <section class="l-section l-section--muted">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="l-eyebrow">Proceso</span>
+                <h2 class="l-title">Tres pasos, menos de 60 segundos</h2>
+            </div>
+            <div class="bento-grid">
+
+                <!-- Step 1 -->
+                <div class="bento-card bento-card--step1">
+                    <div class="bento-step-num" aria-hidden="true">1</div>
+                    <div style="color:var(--color-primary);margin-bottom:.875rem;" aria-hidden="true">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"/>
+                        </svg>
+                    </div>
+                    <h5 class="mb-2">Sube tu archivo</h5>
+                    <p class="text-muted mb-0" style="font-size:.9rem;line-height:1.65;">Excel o CSV, como lo tengas. Sin formato especial.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bento-card bento-card--step2">
+                    <div class="bento-step-num" aria-hidden="true">2</div>
+                    <div style="color:var(--color-primary);margin-bottom:.875rem;" aria-hidden="true">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0 1 12 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0c-.621 0-1.125.504-1.125 1.125v1.5m18.375-2.625c.621 0 1.125.504 1.125 1.125v1.5m-1.125-1.125H3.375"/>
+                        </svg>
+                    </div>
+                    <h5 class="mb-2">Asigna las columnas</h5>
+                    <p class="text-muted mb-0" style="font-size:.9rem;line-height:1.65;">Indica fecha, producto y precio. Tarda 30 segundos.</p>
+                </div>
+
+                <!-- Step 3 — con mock del informe -->
+                <div class="bento-card bento-card--step3">
+                    <div class="bento-step-num" aria-hidden="true">3</div>
+                    <div style="color:var(--color-primary);margin-bottom:.875rem;" aria-hidden="true">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+                        </svg>
+                    </div>
+                    <h5 class="mb-1">Obtén tu informe</h5>
+                    <p class="text-muted" style="font-size:.9rem;line-height:1.65;margin-bottom:0;">Métricas clave, gráficas interactivas y PDF listo para compartir.</p>
+
+                    <!-- Mock report preview -->
+                    <div class="mock-report" aria-hidden="true">
+                        <div class="mock-report__title">Vista previa del informe</div>
+                        <div class="mock-kpis">
+                            <div class="mock-kpi mk-blue">Total: 12.450 €</div>
+                            <div class="mock-kpi mk-green">Mejor mes: Marzo</div>
+                            <div class="mock-kpi mk-amber">Top: Producto A</div>
+                        </div>
+                        <div class="mock-chart-wrap">
+                            <div class="mock-chart-lbl">Ventas por mes</div>
+                            <div class="mock-bars">
+                                <div class="mock-bar" style="height:38%"></div>
+                                <div class="mock-bar" style="height:60%"></div>
+                                <div class="mock-bar" style="height:48%"></div>
+                                <div class="mock-bar" style="height:100%"></div>
+                                <div class="mock-bar" style="height:82%"></div>
+                                <div class="mock-bar" style="height:55%"></div>
+                                <div class="mock-bar" style="height:70%"></div>
+                            </div>
+                        </div>
+                        <div class="mock-export">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+                            Exportar PDF
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="l-section l-section--dark">
+        <div class="container">
+            <span class="l-eyebrow">Empieza ahora</span>
+            <h2 class="l-title" style="color:#fff;">¿Listo para analizar tus ventas?</h2>
+            <p class="mb-4" style="opacity:.85;font-size:1.0625rem;">Gratis. Sin registro. Sin límites.</p>
+            <a href="/app" class="btn-sa btn-sa--accent">
+                Empezar ahora
+                <svg class="sa-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="sa-footer">
+        <div class="container">
+            Sales Analyzer &mdash; Herramienta gratuita de análisis de ventas
+        </div>
+    </footer>
+
 </body>
 </html>

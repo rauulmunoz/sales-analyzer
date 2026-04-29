@@ -2,27 +2,83 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mapeo de columnas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar columnas — Sales Analyzer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="card p-4 shadow">
-            <h1 class="mb-3">🗂️ Asigna tus columnas</h1>
-            <p class="text-muted">Indica qué representa cada columna de tu archivo</p>
+<body>
+
+    <!-- Navbar -->
+    <nav class="sa-nav">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a class="sa-nav__brand" href="/">
+                <svg class="sa-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
+                </svg>
+                Sales Analyzer
+            </a>
+        </div>
+    </nav>
+
+    <div class="page-wrap">
+
+        <!-- Step Indicator -->
+        <nav aria-label="Progreso" class="steps-indicator">
+            <div class="step step--completed">
+                <div class="step__circle" aria-label="Completado">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                    </svg>
+                </div>
+                <span class="step__label">Subir archivo</span>
+            </div>
+            <div class="step-connector step-connector--done" role="presentation"></div>
+            <div class="step step--active">
+                <div class="step__circle">2</div>
+                <span class="step__label">Columnas</span>
+            </div>
+            <div class="step-connector" role="presentation"></div>
+            <div class="step step--pending">
+                <div class="step__circle">3</div>
+                <span class="step__label">Informe</span>
+            </div>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Asigna tus columnas</h1>
+            <p>Indica qué representa cada columna de tu archivo. Los campos marcados con * son obligatorios.</p>
+        </div>
+
+        <!-- Mapping Card -->
+        <div class="sa-card">
 
             {% if error %}
-            <div class = "alert alert-danger mt-3">{{error}}</div>
+            <div class="sa-alert sa-alert--danger" role="alert">
+                <svg class="sa-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" style="margin-top:1px;flex-shrink:0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+                </svg>
+                <span>{{ error }}</span>
+            </div>
             {% endif %}
 
-            <form action="/analizar" method="POST">
+            <!-- Required fields reminder -->
+            <div style="background:var(--color-primary-light);border:1px solid var(--color-border);border-radius:8px;padding:.875rem 1.125rem;margin-bottom:1.5rem;font-size:.875rem;color:var(--color-primary-dark);display:flex;gap:.625rem;align-items:flex-start;">
+                <svg class="sa-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" style="margin-top:1px;flex-shrink:0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/>
+                </svg>
+                <span>Debes asignar al menos las columnas de <strong>Fecha</strong>, <strong>Producto</strong> y <strong>Precio</strong> para generar el informe.</span>
+            </div>
+
+            <form action="/analizar" method="POST" id="mapeo-form">
                 <input type="hidden" name="ruta" value="{{ ruta }}">
 
                 {% for columna in columnas %}
-                <div class="mb-3">
-                    <label class="form-label">{{ columna }}</label>
-                    <select name="{{ columna }}" class="form-select">
-                        <option value="ignorar">Ignorar</option>
+                <div class="sa-field">
+                    <label for="col-{{ loop.index }}" class="sa-label">{{ columna }}</label>
+                    <select id="col-{{ loop.index }}" name="{{ columna }}" class="sa-select">
+                        <option value="ignorar">— Ignorar esta columna —</option>
                         <option value="fecha">Fecha</option>
                         <option value="producto">Producto</option>
                         <option value="cantidad">Cantidad</option>
@@ -31,9 +87,31 @@
                 </div>
                 {% endfor %}
 
-                <button type="submit" class="btn btn-primary">Generar informe</button>
+                <div class="d-flex gap-3 mt-4 flex-wrap">
+                    <button type="submit" class="btn-sa btn-sa--primary" id="submit-btn">
+                        Generar informe
+                        <svg class="sa-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+                        </svg>
+                    </button>
+                    <a href="/app" class="btn-sa btn-sa--ghost">
+                        <svg class="sa-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
+                        </svg>
+                        Volver
+                    </a>
+                </div>
             </form>
         </div>
+
     </div>
+
+    <script>
+        document.getElementById('mapeo-form').addEventListener('submit', function () {
+            var btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Generando informe...';
+        });
+    </script>
 </body>
 </html>
