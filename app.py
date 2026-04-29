@@ -19,7 +19,7 @@ app.secret_key = os.environ.get('SECRET_KEY', "pechugadepollo")
 def landing():
     return render_template('landing.html')
 
-@app.route('/')
+@app.route('/app')
 def index():
     return render_template('index.html')
 
