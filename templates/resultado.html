@@ -59,6 +59,14 @@
             <p>Resultados generados automáticamente a partir de tus datos</p>
         </div>
 
+        {% if filas_vacias > 0 or duplicados > 0 %}
+        <div class="alert alert-success" role="alert" style="margin-bottom: 1.5rem;">
+            <strong>✓ Limpieza aplicada:</strong>
+            {% if duplicados > 0 %}{{ duplicados }} duplicado{{ 's' if duplicados != 1 else '' }} eliminado{{ 's' if duplicados != 1 else '' }}{% endif %}
+            {% if filas_vacias > 0 %}{% if duplicados > 0 %} y {% endif %}{{ filas_vacias }} fila{{ 's' if filas_vacias != 1 else '' }} vacía{{ 's' if filas_vacias != 1 else '' }} eliminada{{ 's' if filas_vacias != 1 else '' }}{% endif %}
+        </div>
+        {% endif %}
+
         <!-- KPI Cards -->
         <div class="row g-3 mb-4">
 

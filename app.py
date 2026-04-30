@@ -82,6 +82,25 @@ def analizar():
                 
     df = df[list(columnas_utiles.keys())].rename(columns = columnas_utiles)
 
+    #Limpieza de datos
+    filas_antes = len(df)
+
+    #Eliminar filas completamente vacías
+    df = df.dropna(how='all')
+    filas_vacias = filas_antes - len(df)
+
+    #Eliminar filas duplicadas
+    filas_antes_duplicados = len(df)
+    df = df.drop_duplicates()
+    duplicados = filas_antes_duplicados - len(df)
+
+    #Quitar espacios en blanco en columnas de texto
+    for col in df.columns:
+        if df[col].dtype == 'object':
+            df[col] = df[col].str.strip()
+
+    df['precio'] = pd.to_numeric(df['precio'], errors='coerce')
+
     #convertir fecha y agrupar por mes
     df['fecha'] = pd.to_datetime(df['fecha'])
     df['mes'] = df['fecha'].dt.to_period('M')
@@ -129,6 +148,8 @@ def analizar():
     peor_mes = ventas_mes.idxmin()
     peor_producto = ventas_producto.idxmin()
 
+    total_ventas = float(total_ventas)
+
     return render_template('resultado.html',
         grafica = grafica,
         grafica2 = grafica2,
@@ -136,7 +157,9 @@ def analizar():
         mejor_mes = mejor_mes,
         mejor_producto = mejor_producto,
         peor_mes = peor_mes,
-        peor_producto = peor_producto)
+        peor_producto = peor_producto,
+        filas_vacias = filas_vacias,
+        duplicados = duplicados)
 
 @app.route('/exportar', methods=['POST'])
 def exportar():
