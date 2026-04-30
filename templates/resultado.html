@@ -147,10 +147,7 @@
                 </svg>
                 Ventas por mes
             </h2>
-            <img src="data:image/png;base64,{{ grafica }}"
-                 class="img-fluid"
-                 alt="Gráfica de barras que muestra las ventas totales agrupadas por mes"
-                 style="border-radius:8px;">
+            {{ grafica|safe }}
         </div>
 
         <!-- Chart: Ventas por producto -->
@@ -162,10 +159,7 @@
                 </svg>
                 Ventas por producto
             </h2>
-            <img src="data:image/png;base64,{{ grafica2 }}"
-                 class="img-fluid"
-                 alt="Gráfica que muestra las ventas totales agrupadas por producto"
-                 style="border-radius:8px;">
+            {{ grafica2|safe }}
         </div>
 
         <!-- Actions -->

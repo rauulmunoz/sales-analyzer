@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt 
+import plotly.express as px
+import plotly.io as pio
 import io 
 import base64
 from reportlab.lib.pagesizes import A4
@@ -85,38 +87,39 @@ def analizar():
     df['mes'] = df['fecha'].dt.to_period('M')
     ventas_mes = df.groupby('mes')['precio'].sum()
 
-    #Gráfica ventas por mes
-    plt.figure(figsize=(10,5))
-    ventas_mes.plot(kind='bar')
+    #Gráfica ventas por mes con Plotly (interactiva)
+    df_mes = ventas_mes.reset_index()
+    df_mes.columns = ['mes', 'total']
+    df_mes['mes'] = df_mes['mes'].astype(str)
+    fig_mes = px.bar(df_mes, x='mes', y='total', title='Ventas por mes', labels={'total': 'Total ventas', 'mes': 'Mes'})
+    grafica = pio.to_html(fig_mes, full_html=False, include_plotlyjs='cdn')
+
+    #Guardar PNG para PDF con matplotlib
+    plt.figure(figsize=(10, 5))
+    plt.bar(df_mes['mes'], df_mes['total'])
     plt.title('Ventas por mes')
     plt.xlabel('Mes')
     plt.ylabel('Total ventas')
     plt.tight_layout()
-
-    #convertir gráfica a imagen
-    img = io.BytesIO()
-    plt.savefig(img, format='png')
     plt.savefig('uploads/grafica_mes.png')
-    img.seek(0)
-    grafica = base64.b64encode(img.getvalue()).decode()
     plt.close()
 
 
-    #Grafica ventas por producto
+    #Grafica ventas por producto con Plotly (interactiva)
     ventas_producto = df.groupby('producto')['precio'].sum().sort_values(ascending=False)
+    df_producto = ventas_producto.reset_index()
+    df_producto.columns = ['producto', 'total']
+    fig_producto = px.bar(df_producto, x='producto', y='total', title='Ventas por producto', labels={'total': 'Total ventas', 'producto': 'Producto'})
+    grafica2 = pio.to_html(fig_producto, full_html=False, include_plotlyjs='cdn')
 
-    plt.figure(figsize=(10,5))
-    ventas_producto.plot(kind='bar')
+    #Guardar PNG para PDF con matplotlib
+    plt.figure(figsize=(10, 5))
+    plt.bar(df_producto['producto'], df_producto['total'])
     plt.title('Ventas por producto')
     plt.xlabel('Producto')
     plt.ylabel('Total ventas')
     plt.tight_layout()
-
-    img2 = io.BytesIO()
-    plt.savefig(img2, format='png')
     plt.savefig('uploads/grafica_producto.png')
-    img.seek(0)
-    grafica2 = base64.b64encode(img2.getvalue()).decode()
     plt.close()
 
     #Resumen
