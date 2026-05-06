@@ -187,6 +187,23 @@ def analizar():
 
     total_ventas = float(total_ventas)
 
+    # Resumen ejecutivo
+    tendencia_texto = "bajista" if variacion and float(str(variacion)) < 0 else "alcista"
+    variacion_abs = abs(float(str(variacion))) if variacion else 0
+
+    resumen = (
+        f"En el periodo analizado, las ventas totales alcanzaron {total_ventas:,.2f}€ "
+        f"con un ticket medio de {ticket_medio:,.2f}€. "
+        f"El mejor mes fue {mejor_mes}, impulsado principalmente por {mejor_producto}, "
+        f"que fue el producto más vendido. "
+        f"Por otro lado, {peor_mes} fue el mes con peores resultados y {peor_producto} "
+        f"el producto con menor rendimiento. "
+        f"El {mejor_dia.lower()} es el mejor día para vender, "
+        f"mientras que el {peor_dia.lower()} registra las ventas más bajas. "
+        f"La tendencia general de ventas es {tendencia_texto}, "
+        f"con una variación del {variacion_abs}% respecto al último mes."
+    )
+
     return render_template('resultado.html',
         grafica = grafica,
         grafica2 = grafica2,
@@ -202,7 +219,8 @@ def analizar():
         grafica_bottom5 = grafica_bottom5,
         ticket_medio = ticket_medio,
         mejor_dia = mejor_dia,
-        peor_dia = peor_dia)
+        peor_dia = peor_dia,
+        resumen = resumen)
 
 @app.route('/exportar', methods=['POST'])
 def exportar():
@@ -217,6 +235,7 @@ def exportar():
     variacion = request.form['variacion']
     mejor_dia = request.form['mejor_dia']
     peor_dia = request.form['peor_dia']
+    resumen = request.form['resumen']
 
     ruta_pdf = 'uploads/informe.pdf'
     c = canvas.Canvas(ruta_pdf, pagesize=A4)
@@ -299,6 +318,22 @@ def exportar():
     for titulo, valor, color in tarjetas_f4:
         dibujar_tarjeta(x, y, ancho_t2, 50, titulo, valor, color)
         x += ancho_t2 + 10
+
+    # Resumen ejecutivo
+    c.setFillColorRGB(0.1, 0.1, 0.1)
+    c.setFont('Helvetica-Bold', 12)
+    c.drawString(50, alto - 460, '¿Qué nos dicen los datos?')
+    
+    c.setFont('Helvetica', 10)
+    c.setFillColorRGB(0.3, 0.3, 0.3)
+    
+    # Dividir el texto en líneas para que quepa
+    from textwrap import wrap
+    lineas = wrap(resumen, width=90)
+    y_texto = alto - 480
+    for linea in lineas:
+        c.drawString(50, y_texto, linea)
+        y_texto -= 15
 
     # --- PÁGINA 2: Gráficas ---
     c.showPage()

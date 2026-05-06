@@ -179,6 +179,12 @@
             </div>
         </div>
 
+        <!-- Resumen ejecutivo -->
+        <div class="chart-card mb-4">
+            <h2 class="chart-card__title">📝 ¿Qué nos dicen los datos?</h2>
+            <p style="font-size: 1rem; line-height: 1.8; color: var(--color-text);">{{ resumen }}</p>
+        </div>
+
         <!-- Gráfica ventas por mes -->
         <div class="chart-card">
             <h2 class="chart-card__title">Ventas por mes</h2>
@@ -219,6 +225,7 @@
                 <input type="hidden" name="variacion" value="{{ variacion }}">
                 <input type="hidden" name="mejor_dia" value="{{ mejor_dia }}">
                 <input type="hidden" name="peor_dia" value="{{ peor_dia }}">
+                <input type="hidden" name="resumen" value="{{ resumen }}">
                 <button type="submit" class="btn-sa btn-sa--success" id="export-btn">
                     📄 Exportar PDF
                 </button>
