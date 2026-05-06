@@ -184,6 +184,21 @@
             {{ grafica2|safe }}
         </div>
 
+        <div class = "row mb-4">
+            <div class = "col-md-6">
+                <div class = "card p-4 shadow">
+                    <h2 class = "mb-3">🏆 Top 5 Productos</h2>
+                    {{ grafica_top5|safe }}
+                </div>
+            </div>
+            <div class = "col-md-6">
+                <div class = "card p-4 shadow">
+                    <h2 class = "mb-3">⚠️ Peores 5 Productos</h2>
+                    {{ grafica_bottom5|safe }}
+                </div>
+            </div>
+        </div>
+
         <!-- Actions -->
         <div class="d-flex gap-3 flex-wrap">
 
