@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import pandas as pd
+import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt 
@@ -110,7 +111,12 @@ def analizar():
     df_mes = ventas_mes.reset_index()
     df_mes.columns = ['mes', 'total']
     df_mes['mes'] = df_mes['mes'].astype(str)
-    fig_mes = px.bar(df_mes, x='mes', y='total', title='Ventas por mes', labels={'total': 'Total ventas', 'mes': 'Mes'})
+    fig_mes = px.bar(df_mes, x = "mes", y = "total", title = 'Ventas por mes', labels = {'total': 'Total ventas', 'mes': 'Mes'})
+
+    #Línea de tendencia
+    z = np.polyfit(range(len(df_mes)), df_mes['total'], 1)
+    p = np.poly1d(z)
+    fig_mes.add_scatter(x=df_mes['mes'], y=p(range(len(df_mes))), mode='lines', name='Tendencia', line=dict(color='red', dash='dash'))
     grafica = pio.to_html(fig_mes, full_html=False, include_plotlyjs='cdn')
 
     #Guardar PNG para PDF con matplotlib
