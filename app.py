@@ -157,6 +157,12 @@ def analizar():
     #Ticket medio
     ticket_medio = round(float(df['precio'].mean()), 2)
 
+    #Mejor y peor día de la semana
+    df['dia_semana'] = df['fecha'].dt.day_name(locale='es_ES')
+    ventas_dia = df.groupby('dia_semana')['precio'].sum()
+    mejor_dia = ventas_dia.idxmax()
+    peor_dia = ventas_dia.idxmin()
+
     #Top 5 y Peores 5 productos
     top5 = ventas_producto.head(5).reset_index()
     top5.columns = ['producto', 'total']
@@ -194,7 +200,9 @@ def analizar():
         duplicados = duplicados,
         grafica_top5 = grafica_top5,
         grafica_bottom5 = grafica_bottom5,
-        ticket_medio = ticket_medio)
+        ticket_medio = ticket_medio,
+        mejor_dia = mejor_dia,
+        peor_dia = peor_dia)
 
 @app.route('/exportar', methods=['POST'])
 def exportar():
