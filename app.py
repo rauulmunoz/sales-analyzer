@@ -154,6 +154,16 @@ def analizar():
     peor_mes = ventas_mes.idxmin()
     peor_producto = ventas_producto.idxmin()
 
+    #Comparativa mes anterior
+    if len(ventas_mes) >= 2:
+        ultimo_mes = ventas_mes.iloc[-1]
+        mes_anterior = ventas_mes.iloc[-2]
+        variacion = ((ultimo_mes -mes_anterior) / mes_anterior) * 100 
+        variacion = round(variacion, 1)
+
+    else:
+        variacion = None
+
     total_ventas = float(total_ventas)
 
     return render_template('resultado.html',
@@ -164,6 +174,7 @@ def analizar():
         mejor_producto = mejor_producto,
         peor_mes = peor_mes,
         peor_producto = peor_producto,
+        variacion = variacion,
         filas_vacias = filas_vacias,
         duplicados = duplicados)
 

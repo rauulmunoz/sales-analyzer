@@ -145,6 +145,20 @@
                 </div>
             </div>
 
+            {% if variacion is not none %}
+            <!-- Variación mes anterior -->
+             <div class = "card p-3 shadow mb-4 text-center">
+                <h6 class = "text-muted">📊 Variación último mes</h6>
+                {% if variacion >= 0 %}
+                    <h3 class = "text-success">▲ +{{ variacion }}%</h3>
+                    <p class = "text-muted">Mejor que el mes anterior</p>
+                {% else %}
+                    <h3 class = "text-danger">▼ {{ variacion }}%</h3>
+                    <p class = "text-muted">Peor que el mes anterior</p>
+                {% endif %}
+             </div>
+             {% endif %}
+
         </div>
 
         <!-- Chart: Ventas por mes -->
