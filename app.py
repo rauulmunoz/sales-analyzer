@@ -154,16 +154,19 @@ def analizar():
     peor_mes = ventas_mes.idxmin()
     peor_producto = ventas_producto.idxmin()
 
+    #Ticket medio
+    ticket_medio = round(float(df['precio'].mean()), 2)
+
     #Top 5 y Peores 5 productos
     top5 = ventas_producto.head(5).reset_index()
     top5.columns = ['producto', 'total']
     bottom5 = ventas_producto.tail(5).reset_index()
     bottom5.columns = ['producto', 'total']
 
-    fig_top5 = px.bar(top5, x='producto', y='total', title='Top 5 productos', labels={'total': 'Total ventas', 'producto': 'Producto'}, color_discrete_sequence=['#2ecc71'])
+    fig_top5 = px.bar(top5, x='producto', y='total', title='Mejores 5 productos', labels={'total': 'Total ventas', 'producto': 'Producto'}, color_discrete_sequence=['#2ecc71'])
     grafica_top5 = pio.to_html(fig_top5, full_html=False, include_plotlyjs='False')
 
-    fig_bottom5 = px.bar(bottom5, x='producto', y='total', title='Bottom 5 productos', labels={'total': 'Total ventas', 'producto': 'Producto'}, color_discrete_sequence=['#e74c3c'])
+    fig_bottom5 = px.bar(bottom5, x='producto', y='total', title='Peores 5 productos', labels={'total': 'Total ventas', 'producto': 'Producto'}, color_discrete_sequence=['#e74c3c'])
     grafica_bottom5 = pio.to_html(fig_bottom5, full_html=False, include_plotlyjs='False')
 
     #Comparativa mes anterior
@@ -190,7 +193,8 @@ def analizar():
         filas_vacias = filas_vacias,
         duplicados = duplicados,
         grafica_top5 = grafica_top5,
-        grafica_bottom5 = grafica_bottom5)
+        grafica_bottom5 = grafica_bottom5,
+        ticket_medio = ticket_medio)
 
 @app.route('/exportar', methods=['POST'])
 def exportar():
