@@ -211,6 +211,10 @@ def exportar():
     mejor_producto = request.form['mejor_producto']
     peor_mes = request.form['peor_mes']
     peor_producto = request.form['peor_producto']
+    ticket_medio = float(request.form['ticket_medio'])
+    variacion = request.form['variacion']
+    mejor_dia = request.form['mejor_dia']
+    peor_dia = request.form['peor_dia']
 
     ruta_pdf = 'uploads/informe.pdf'
     c = canvas.Canvas(ruta_pdf, pagesize=A4)
@@ -224,19 +228,17 @@ def exportar():
     c.setFillColorRGB(0.5, 0.5, 0.5)
     c.drawString(50, alto - 80, 'Resultados generados automaticamente')
 
-    # Tarjetas resumen
-    tarjetas = [
+    # Tarjetas fila 1
+    tarjetas_f1 = [
         ('Total ventas', f'{total_ventas:.2f} EUR'),
-        ('Mejor mes', str(mejor_mes)),
-        ('Mejor producto', mejor_producto),
-        ('Peor mes', str(peor_mes)),
-        ('Peor producto', peor_producto),
+        ('Ticket medio', f'{ticket_medio:.2f} EUR'),
+        ('Variacion ultimo mes', f'{variacion}%'),
     ]
 
     x = 50
     y = alto - 160
-    ancho_tarjeta = 95
-    for titulo, valor in tarjetas:
+    ancho_tarjeta = 155
+    for titulo, valor in tarjetas_f1:
         c.setFillColorRGB(0.95, 0.95, 0.95)
         c.roundRect(x, y, ancho_tarjeta, 55, 5, fill=1, stroke=0)
         c.setFillColorRGB(0.5, 0.5, 0.5)
@@ -244,17 +246,75 @@ def exportar():
         c.drawCentredString(x + ancho_tarjeta/2, y + 42, titulo)
         c.setFillColorRGB(0.1, 0.1, 0.1)
         c.setFont('Helvetica-Bold', 10)
-        c.drawCentredString(x + ancho_tarjeta/2, y + 20, valor)
+        c.drawCentredString(x + ancho_tarjeta/2, y + 22, valor)
+        x += ancho_tarjeta + 10
+
+    # Tarjetas fila 2
+    tarjetas_f2 = [
+        ('Mejor mes', str(mejor_mes)),
+        ('Mejor producto', mejor_producto),
+    ]
+
+    x = 50
+    y = alto - 230
+    ancho_tarjeta = 240
+    for titulo, valor in tarjetas_f2:
+        c.setFillColorRGB(0.95, 0.95, 0.95)
+        c.roundRect(x, y, ancho_tarjeta, 50, 5, fill=1, stroke=0)
+        c.setFillColorRGB(0.5, 0.5, 0.5)
+        c.setFont('Helvetica', 8)
+        c.drawCentredString(x + ancho_tarjeta/2, y + 36, titulo)
+        c.setFillColorRGB(0.1, 0.1, 0.1)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawCentredString(x + ancho_tarjeta/2, y + 18, valor)
+        x += ancho_tarjeta + 10
+
+    # Tarjetas fila 3
+    tarjetas_f3 = [
+        ('Peor mes', str(peor_mes)),
+        ('Peor producto', peor_producto),
+    ]
+
+    x = 50
+    y = alto - 295
+    for titulo, valor in tarjetas_f3:
+        c.setFillColorRGB(0.95, 0.95, 0.95)
+        c.roundRect(x, y, ancho_tarjeta, 50, 5, fill=1, stroke=0)
+        c.setFillColorRGB(0.5, 0.5, 0.5)
+        c.setFont('Helvetica', 8)
+        c.drawCentredString(x + ancho_tarjeta/2, y + 36, titulo)
+        c.setFillColorRGB(0.1, 0.1, 0.1)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawCentredString(x + ancho_tarjeta/2, y + 18, valor)
+        x += ancho_tarjeta + 10
+
+    # Tarjetas fila 4
+    tarjetas_f4 = [
+        ('Mejor dia', mejor_dia),
+        ('Peor dia', peor_dia),
+    ]
+
+    x = 50
+    y = alto - 360
+    for titulo, valor in tarjetas_f4:
+        c.setFillColorRGB(0.95, 0.95, 0.95)
+        c.roundRect(x, y, ancho_tarjeta, 50, 5, fill=1, stroke=0)
+        c.setFillColorRGB(0.5, 0.5, 0.5)
+        c.setFont('Helvetica', 8)
+        c.drawCentredString(x + ancho_tarjeta/2, y + 36, titulo)
+        c.setFillColorRGB(0.1, 0.1, 0.1)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawCentredString(x + ancho_tarjeta/2, y + 18, valor)
         x += ancho_tarjeta + 10
 
     # Gráficas
     c.setFillColorRGB(0.1, 0.1, 0.1)
     c.setFont('Helvetica-Bold', 14)
-    c.drawString(50, alto - 240, 'Ventas por mes')
-    c.drawImage('uploads/grafica_mes.png', 50, alto - 450, width=480, height=200)
+    c.drawString(50, alto - 400, 'Ventas por mes')
+    c.drawImage('uploads/grafica_mes.png', 50, alto - 570, width=480, height=160)
 
-    c.drawString(50, alto - 470, 'Ventas por producto')
-    c.drawImage('uploads/grafica_producto.png', 50, alto - 680, width=480, height=200)
+    c.drawString(50, alto - 590, 'Ventas por producto')
+    c.drawImage('uploads/grafica_producto.png', 50, alto - 760, width=480, height=160)
 
     c.save()
     return send_file(ruta_pdf, as_attachment=True)
