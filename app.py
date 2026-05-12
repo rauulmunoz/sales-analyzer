@@ -217,6 +217,13 @@ def analizar():
         f"con una variación del {variacion_abs}% respecto al último mes."
     )
 
+    #Borra archjivo subido por privacidad
+    try:
+        os.remove(ruta)
+    except:
+        pass
+
+        
     return render_template('resultado.html',
         grafica = grafica,
         grafica2 = grafica2,
