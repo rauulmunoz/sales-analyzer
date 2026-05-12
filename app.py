@@ -171,7 +171,12 @@ def analizar():
     ticket_medio = round(float(df['precio'].mean()), 2)
 
     #Mejor y peor día de la semana
-    df['dia_semana'] = df['fecha'].dt.day_name(locale='es_ES')
+    dias_es = {
+        'Monday': 'Lunes', 'Tuesday': 'Martes', 'Wednesday': 'Miércoles',
+        'Thursday': 'Jueves', 'Friday': 'Viernes', 'Saturday': 'Sábado', 'Sunday': 'Domingo'
+    }
+    df['dia_semana'] = df['fecha'].dt.day_name().map(dias_es)
+    
     ventas_dia = df.groupby('dia_semana')['precio'].sum()
     mejor_dia = ventas_dia.idxmax()
     peor_dia = ventas_dia.idxmin()
@@ -223,7 +228,7 @@ def analizar():
     except:
         pass
 
-        
+
     return render_template('resultado.html',
         grafica = grafica,
         grafica2 = grafica2,
