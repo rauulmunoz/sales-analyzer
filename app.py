@@ -14,6 +14,7 @@ from reportlab.lib import colors
 from flask import send_file
 from werkzeug.utils import secure_filename
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', "pechugadepollo")
@@ -112,6 +113,7 @@ def analizar():
     df_mes.columns = ['mes', 'total']
     df_mes['mes'] = df_mes['mes'].astype(str)
     fig_mes = px.bar(df_mes, x = "mes", y = "total", title = 'Ventas por mes', labels = {'total': 'Total ventas', 'mes': 'Mes'})
+    fig_mes.update_traces(marker_color='#1E40AF')
 
     #Línea de tendencia
     z = np.polyfit(range(len(df_mes)), df_mes['total'], 1)
@@ -135,6 +137,7 @@ def analizar():
     df_producto = ventas_producto.reset_index()
     df_producto.columns = ['producto', 'total']
     fig_producto = px.bar(df_producto, x='producto', y='total', title='Ventas por producto', labels={'total': 'Total ventas', 'producto': 'Producto'})
+    fig_producto.update_traces(marker_color='#1E40AF')
     grafica2 = pio.to_html(fig_producto, full_html=False, include_plotlyjs='cdn')
 
     #Guardar PNG para PDF con matplotlib
@@ -154,6 +157,16 @@ def analizar():
     peor_mes = ventas_mes.idxmin()
     peor_producto = ventas_producto.idxmin()
 
+    meses_es = {
+    'January': 'Enero', 'February': 'Febrero', 'March': 'Marzo',
+    'April': 'Abril', 'May': 'Mayo', 'June': 'Junio',
+    'July': 'Julio', 'August': 'Agosto', 'September': 'Septiembre',
+    'October': 'Octubre', 'November': 'Noviembre', 'December': 'Diciembre'
+    }
+    mejor_mes_dt = datetime.strptime(str(mejor_mes), "%Y-%m")
+    peor_mes_dt = datetime.strptime(str(peor_mes), "%Y-%m")
+    mejor_mes_fmt = meses_es[mejor_mes_dt.strftime("%B")] + ' ' + mejor_mes_dt.strftime("%Y")
+    peor_mes_fmt = meses_es[peor_mes_dt.strftime("%B")] + ' ' + peor_mes_dt.strftime("%Y")
     #Ticket medio
     ticket_medio = round(float(df['precio'].mean()), 2)
 
@@ -209,8 +222,10 @@ def analizar():
         grafica2 = grafica2,
         total_ventas = total_ventas,
         mejor_mes = mejor_mes,
+        mejor_mes_fmt = mejor_mes_fmt,
         mejor_producto = mejor_producto,
         peor_mes = peor_mes,
+        peor_mes_fmt = peor_mes_fmt,
         peor_producto = peor_producto,
         variacion = variacion,
         filas_vacias = filas_vacias,

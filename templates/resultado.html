@@ -6,6 +6,83 @@
     <title>Informe de ventas — Sales Analyzer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        /* Scroll reveal */
+        .will-reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.5s ease var(--reveal-delay, 0s),
+                        transform 0.5s ease var(--reveal-delay, 0s);
+        }
+        .will-reveal.in-view { opacity: 1; transform: translateY(0); }
+
+        /* Chart card hover lift */
+        .chart-card {
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+        }
+        .chart-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 36px rgba(0,0,0,.10);
+        }
+
+        /* Summary card */
+        .summary-card {
+            background: linear-gradient(135deg, #EFF6FF 0%, #f0fdf4 100%);
+            border: 1px solid #bfdbfe;
+            border-radius: 16px;
+            padding: 2rem 2.25rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(59,130,246,.08) 0%, transparent 70%);
+            top: -70px; right: -50px;
+            pointer-events: none;
+        }
+        .summary-card__header {
+            display: flex;
+            align-items: center;
+            gap: .875rem;
+            margin-bottom: 1rem;
+        }
+        .summary-card__icon-box {
+            width: 46px; height: 46px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(59,130,246,.32);
+        }
+        .summary-card__title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin: 0;
+        }
+        .summary-card__body {
+            font-size: 1.0625rem;
+            line-height: 1.85;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        /* Actions */
+        .actions-section {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 2.5rem 0 1.5rem;
+        }
+        .btn-sa--xl {
+            padding: .9rem 2.25rem;
+            font-size: 1.0625rem;
+        }
+    </style>
 </head>
 <body>
 
@@ -110,7 +187,7 @@
                     </div>
                     <div>
                         <div class="kpi-label">Mejor mes</div>
-                        <div class="kpi-value">{{ mejor_mes }}</div>
+                        <div class="kpi-value">{{ mejor_mes_fmt }}</div>
                     </div>
                 </div>
             </div>
@@ -136,7 +213,7 @@
                     </div>
                     <div>
                         <div class="kpi-label">Peor mes</div>
-                        <div class="kpi-value">{{ peor_mes }}</div>
+                        <div class="kpi-value">{{ peor_mes_fmt }}</div>
                     </div>
                 </div>
             </div>
@@ -180,9 +257,16 @@
         </div>
 
         <!-- Resumen ejecutivo -->
-        <div class="chart-card mb-4">
-            <h2 class="chart-card__title">📝 ¿Qué nos dicen los datos?</h2>
-            <p style="font-size: 1rem; line-height: 1.8; color: var(--color-text);">{{ resumen }}</p>
+        <div class="summary-card">
+            <div class="summary-card__header">
+                <div class="summary-card__icon-box" aria-hidden="true">
+                    <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/>
+                    </svg>
+                </div>
+                <h2 class="summary-card__title">¿Qué nos dicen los datos?</h2>
+            </div>
+            <p class="summary-card__body">{{ resumen }}</p>
         </div>
 
         <!-- Gráfica ventas por mes -->
@@ -214,7 +298,7 @@
         </div>
 
         <!-- Acciones -->
-        <div class="d-flex gap-3 flex-wrap">
+        <div class="actions-section">
             <form action="/exportar" method="POST" id="export-form">
                 <input type="hidden" name="total_ventas" value="{{ total_ventas }}">
                 <input type="hidden" name="mejor_mes" value="{{ mejor_mes }}">
@@ -226,25 +310,51 @@
                 <input type="hidden" name="mejor_dia" value="{{ mejor_dia }}">
                 <input type="hidden" name="peor_dia" value="{{ peor_dia }}">
                 <input type="hidden" name="resumen" value="{{ resumen }}">
-                <button type="submit" class="btn-sa btn-sa--success" id="export-btn">
+                <button type="submit" class="btn-sa btn-sa--success btn-sa--xl" id="export-btn">
                     📄 Exportar PDF
                 </button>
             </form>
-            <a href="/app" class="btn-sa btn-sa--ghost">↩ Analizar otro archivo</a>
+            <a href="/app" class="btn-sa btn-sa--ghost btn-sa--xl">↩ Analizar otro archivo</a>
         </div>
 
     </div>
 
     <script>
+    (function () {
+        // Scroll reveal
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Add reveal to all target elements
+        document.querySelectorAll('.kpi-card, .chart-card, .summary-card').forEach(function (el) {
+            el.classList.add('will-reveal');
+            io.observe(el);
+        });
+
+        // Stagger within each row (kpi-cards side by side)
+        document.querySelectorAll('.row').forEach(function (row) {
+            row.querySelectorAll('.kpi-card, .chart-card').forEach(function (el, i) {
+                el.style.setProperty('--reveal-delay', (i * 0.09) + 's');
+            });
+        });
+
+        // Export form feedback
         document.getElementById('export-form').addEventListener('submit', function () {
             var btn = document.getElementById('export-btn');
             btn.disabled = true;
             btn.textContent = 'Generando PDF...';
             setTimeout(function () {
                 btn.disabled = false;
-                btn.textContent = '📄 Exportar PDF';
+                btn.innerHTML = '📄 Exportar PDF';
             }, 4000);
         });
+    })();
     </script>
 </body>
 </html>

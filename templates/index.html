@@ -98,6 +98,10 @@
         document.getElementById('archivo').addEventListener('change', function() {
         var nombre = this.files[0] ? this.files[0].name : '';
         document.getElementById('file-name').textContent = nombre;
+        if (nombre) {
+            document.querySelector('.file-zone').style.borderColor = 'var(--color-success)';
+            document.querySelector('.file-zone').style.background = '#f0fdf4';
+        }
         });
     </script>
 </body>

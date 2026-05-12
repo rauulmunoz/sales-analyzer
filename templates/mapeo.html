@@ -111,6 +111,19 @@
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Generando informe...';
         });
+
+        document.querySelectorAll('.sa-select').forEach(function(select){
+            select.addEventListener('change', function(){
+                if (this.value === 'ignorar') {
+                    this.style.borderColor = '';
+                    this.style.background = '';
+                }
+                else{
+                    this.style.borderColor = 'var(--color-success)';
+                    this.style.background = '#f0fdf4';
+                }
+            });
+        });
     </script>
 </body>
 </html>

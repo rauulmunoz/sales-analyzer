@@ -120,13 +120,32 @@
         }
         .mock-chart-lbl { font-size: .6875rem; color: var(--color-text-muted); font-weight: 600; margin-bottom: .5rem; }
         .mock-bars { display: flex; align-items: flex-end; gap: .375rem; height: 56px; }
-        .mock-bar { flex: 1; background: var(--color-primary); border-radius: 3px 3px 0 0; opacity: .65; }
+        .mock-bar { flex: 1; background: var(--color-primary); border-radius: 3px 3px 0 0; opacity: .65; transition: height 0.6s ease; }
         .mock-export {
             display: inline-flex; align-items: center; gap: .375rem;
             background: var(--color-success); color: #fff;
             padding: .375rem .875rem; border-radius: 7px;
             font-size: .75rem; font-weight: 600;
         }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .anim { opacity: 0; animation: fadeInUp 0.6s ease forwards; }
+        .anim-1 { animation-delay: 0.1s; }
+        .anim-2 { animation-delay: 0.25s; }
+        .anim-3 { animation-delay: 0.4s; }
+        .anim-4 { animation-delay: 0.55s; }
+
+        /* ── Scroll reveal ─────────────────────────────────── */
+        .will-reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.6s ease var(--reveal-delay, 0s),
+                        transform 0.6s ease var(--reveal-delay, 0s);
+        }
+        .will-reveal.in-view { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
@@ -152,13 +171,13 @@
     <!-- Hero -->
     <section class="hero">
         <div class="container" style="position:relative;z-index:1;">
-            <div class="hero__eyebrow">Sin registro &middot; Sin instalación &middot; 100% gratis</div>
-            <h1>Convierte tus datos<br>en <span class="accent-text">decisiones</span></h1>
-            <p class="lead">
+            <div class="hero__eyebrow anim anim-1">Sin registro &middot; Sin instalación &middot; 100% gratis</div>
+            <h1 class = "anim anim-2">Convierte tus datos<br>en <span class="accent-text">decisiones</span></h1>
+            <p class="lead anim anim-3">
                 Sube tu Excel o CSV y obtén gráficas, métricas clave<br>
                 e informe PDF al instante. Sin conocimientos técnicos.
             </p>
-            <a href="/app" class="btn-sa btn-sa--accent">
+            <a href="/app" class="btn-sa btn-sa--accent anim anim-4">
                 Analizar mis ventas ahora
                 <svg class="sa-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
@@ -282,13 +301,13 @@
                         <div class="mock-chart-wrap">
                             <div class="mock-chart-lbl">Ventas por mes</div>
                             <div class="mock-bars">
-                                <div class="mock-bar" style="height:38%"></div>
-                                <div class="mock-bar" style="height:60%"></div>
-                                <div class="mock-bar" style="height:48%"></div>
-                                <div class="mock-bar" style="height:100%"></div>
-                                <div class="mock-bar" style="height:82%"></div>
-                                <div class="mock-bar" style="height:55%"></div>
-                                <div class="mock-bar" style="height:70%"></div>
+                                <div class="mock-bar" data-h="38" style="height:0"></div>
+                                <div class="mock-bar" data-h="60" style="height:0"></div>
+                                <div class="mock-bar" data-h="48" style="height:0"></div>
+                                <div class="mock-bar" data-h="100" style="height:0"></div>
+                                <div class="mock-bar" data-h="82" style="height:0"></div>
+                                <div class="mock-bar" data-h="55" style="height:0"></div>
+                                <div class="mock-bar" data-h="70" style="height:0"></div>
                             </div>
                         </div>
                         <div class="mock-export">
@@ -324,5 +343,70 @@
         </div>
     </footer>
 
+
+<script>
+(function () {
+    // 1. Scroll reveal — feature cards, bento cards, CTA
+    var revealObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    [
+        { selector: '.feature-card',             baseDelay: 0.1,  step: 0.1  },
+        { selector: '.bento-card',               baseDelay: 0,    step: 0.15 },
+        { selector: '.l-section--dark .container', baseDelay: 0,  step: 0    }
+    ].forEach(function (group) {
+        document.querySelectorAll(group.selector).forEach(function (el, i) {
+            el.classList.add('will-reveal');
+            el.style.setProperty('--reveal-delay', (group.baseDelay + i * group.step) + 's');
+            revealObserver.observe(el);
+        });
+    });
+
+    // 2. Bar grow animation
+    var mockReport = document.querySelector('.mock-report');
+    if (mockReport) {
+        var barObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.mock-bar[data-h]').forEach(function (bar, i) {
+                        setTimeout(function () { bar.style.height = bar.dataset.h + '%'; }, i * 80);
+                    });
+                    barObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        barObserver.observe(mockReport);
+    }
+
+    // 3. Counter 0 → 12.450 €
+    var kpiEl = document.querySelector('.mock-kpi.mk-blue');
+    if (kpiEl) {
+        var counterObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    var target = 12450, duration = 1500, startTime = null;
+                    function tick(now) {
+                        if (!startTime) startTime = now;
+                        var progress = Math.min((now - startTime) / duration, 1);
+                        var eased = 1 - Math.pow(1 - progress, 3);
+                        var value = Math.round(eased * target);
+                        kpiEl.textContent = 'Total: ' + value.toLocaleString('es-ES') + ' €';
+                        if (progress < 1) { requestAnimationFrame(tick); }
+                    }
+                    requestAnimationFrame(tick);
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        counterObserver.observe(kpiEl);
+    }
+})();
+</script>
 </body>
 </html>
