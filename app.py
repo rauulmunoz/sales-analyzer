@@ -19,6 +19,17 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', "pechugadepollo")
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOADS_DIR = os.path.join(BASE_DIR, 'uploads')
+os.makedirs(UPLOADS_DIR, exist_ok=True)
+
+def ruta_segura(ruta):
+    ruta_abs = os.path.realpath(os.path.join(BASE_DIR, ruta))
+    upload_abs = os.path.realpath(UPLOADS_DIR)
+    if not ruta_abs.startswith(upload_abs + os.sep):
+        raise ValueError(f"Ruta no permitida: {ruta}")
+    return ruta_abs
+
 @app.route('/')
 def landing():
     return render_template('landing.html')
@@ -58,12 +69,19 @@ def upload():
 
 @app.route('/analizar', methods=['POST'])
 def analizar():
-    ruta = request.form['ruta']
+    ruta_form = request.form['ruta']
+    try:
+        ruta_abs = ruta_segura(ruta_form)
+    except ValueError:
+        return render_template('index.html', error='Ruta de archivo no válida.')
 
-    if ruta.endswith('.csv'):
-        df = pd.read_csv(ruta)
+    if not os.path.exists(ruta_abs):
+        return render_template('index.html', error='El archivo ya no existe. Por favor sube el archivo de nuevo.')
+
+    if ruta_abs.endswith('.csv'):
+        df = pd.read_csv(ruta_abs)
     else:
-        df = pd.read_excel(ruta)
+        df = pd.read_excel(ruta_abs)
 
     mapeo = {}
     for columna in df.columns:
