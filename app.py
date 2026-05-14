@@ -11,6 +11,7 @@ import base64
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
+from reportlab.lib.utils import ImageReader
 from flask import send_file
 from werkzeug.utils import secure_filename
 import os
@@ -290,6 +291,10 @@ def exportar():
     mejor_dia = request.form['mejor_dia']
     peor_dia = request.form['peor_dia']
     resumen = request.form['resumen']
+    img_mes_b64 = request.form['img_mes_b64']
+    img_prod_b64 = request.form['img_prod_b64']
+    buf_mes = io.BytesIO(base64.b64decode(img_mes_b64)) if img_mes_b64 else None
+    buf_prod = io.BytesIO(base64.b64decode(img_prod_b64)) if img_prod_b64 else None
 
     ruta_pdf = 'uploads/informe.pdf'
     c = canvas.Canvas(ruta_pdf, pagesize=A4)
@@ -391,15 +396,16 @@ def exportar():
 
     # --- PÁGINA 2: Gráficas ---
     c.showPage()
-
     c.setFillColorRGB(0.1, 0.1, 0.1)
     c.setFont('Helvetica-Bold', 14)
     c.drawString(50, alto - 60, 'Ventas por mes')
-    c.drawImage('uploads/grafica_mes.png', 50, alto - 330, width=ancho - 100, height=250)
+    if buf_mes:
+        c.drawImage(ImageReader(buf_mes), 50, alto - 330, width=ancho - 100, height=250)
 
     c.setFont('Helvetica-Bold', 14)
     c.drawString(50, alto - 360, 'Ventas por producto')
-    c.drawImage('uploads/grafica_producto.png', 50, alto - 630, width=ancho - 100, height=250)
+    if buf_prod:
+        c.drawImage(ImageReader(buf_prod), 50, alto - 630, width=ancho - 100, height=250)
 
     c.save()
     return send_file(ruta_pdf, as_attachment=True)
