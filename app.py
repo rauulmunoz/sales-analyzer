@@ -15,6 +15,7 @@ from flask import send_file
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
+import uuid
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', "pechugadepollo")
@@ -140,14 +141,17 @@ def analizar():
     grafica = pio.to_html(fig_mes, full_html=False, include_plotlyjs='cdn')
 
     #Guardar PNG para PDF con matplotlib
+    buf_mes = io.BytesIO()
     plt.figure(figsize=(10, 5))
-    plt.bar(df_mes['mes'], df_mes['total'])
+    plt.bar(df_mes['mes'], df_mes['total'], color='#1E40AF')
     plt.title('Ventas por mes')
     plt.xlabel('Mes')
     plt.ylabel('Total ventas')
     plt.tight_layout()
-    plt.savefig('uploads/grafica_mes.png')
+    plt.savefig(buf_mes, format='png', dpi=150)
     plt.close()
+    buf_mes.seek(0)
+    img_mes_b64 = base64.b64encode(buf_mes.read()).decode('utf-8')
 
 
     #Grafica ventas por producto con Plotly (interactiva)
@@ -159,14 +163,17 @@ def analizar():
     grafica2 = pio.to_html(fig_producto, full_html=False, include_plotlyjs='cdn')
 
     #Guardar PNG para PDF con matplotlib
+    buf_prod = io.BytesIO()
     plt.figure(figsize=(10, 5))
-    plt.bar(df_producto['producto'], df_producto['total'])
+    plt.bar(df_producto['producto'], df_producto['total'], color='#1E40AF')
     plt.title('Ventas por producto')
     plt.xlabel('Producto')
     plt.ylabel('Total ventas')
     plt.tight_layout()
-    plt.savefig('uploads/grafica_producto.png')
+    plt.savefig(buf_prod, format='png', dpi=150)
     plt.close()
+    buf_prod.seek(0)
+    img_prod_b64 = base64.b64encode(buf_prod.read()).decode('utf-8')
 
     #Resumen
     total_ventas = df['precio'].sum()
@@ -265,6 +272,8 @@ def analizar():
         ticket_medio = ticket_medio,
         mejor_dia = mejor_dia,
         peor_dia = peor_dia,
+        img_mes_b64 = img_mes_b64,
+        img_prod_b64 = img_prod_b64,
         resumen = resumen)
 
 @app.route('/exportar', methods=['POST'])
