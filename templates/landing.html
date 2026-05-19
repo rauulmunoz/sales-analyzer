@@ -24,7 +24,7 @@
             content: '';
             position: absolute;
             width: 560px; height: 560px;
-            background: radial-gradient(circle, rgba(217,119,6,.22) 0%, transparent 65%);
+            background: radial-gradient(circle, rgba(99,102,241,.18) 0%, transparent 65%);
             top: -180px; right: 4%;
             pointer-events: none;
         }
@@ -32,15 +32,15 @@
             content: '';
             position: absolute;
             width: 420px; height: 420px;
-            background: radial-gradient(circle, rgba(59,130,246,.14) 0%, transparent 65%);
+            background: radial-gradient(circle, rgba(14,165,233,.14) 0%, transparent 65%);
             bottom: -140px; left: 4%;
             pointer-events: none;
         }
         .hero__eyebrow {
             display: inline-block;
-            background: rgba(217,119,6,.14);
-            color: #FBBF24;
-            border: 1px solid rgba(217,119,6,.3);
+            background: rgba(14,165,233,.12);
+            color: #38bdf8;
+            border: 1px solid rgba(14,165,233,.3);
             border-radius: 99px;
             padding: .35rem 1.125rem;
             font-size: .8125rem;
@@ -50,7 +50,7 @@
         }
         .hero h1 { font-size: clamp(2.375rem, 5.5vw, 3.5rem); margin-bottom: 1.375rem; color: #fff; }
         .hero h1 .accent-text {
-            background: linear-gradient(90deg, #FBBF24 0%, #F59E0B 100%);
+            background: linear-gradient(90deg, #0ea5e9 0%, #6366f1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -66,7 +66,7 @@
             gap: 1rem;
         }
         .bento-card {
-            background: #fff;
+            background: var(--color-surface);
             border: 1px solid var(--color-border);
             border-radius: 16px;
             padding: 1.875rem;
@@ -92,8 +92,8 @@
 
         /* ── Mock Report Preview ────────────────────────────── */
         .mock-report {
-            background: var(--color-bg);
-            border: 1px solid var(--color-border);
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
             border-radius: 10px;
             padding: 1rem 1.125rem;
             flex: 1;
@@ -111,11 +111,11 @@
             padding: .3rem .6rem; border-radius: 6px;
             font-size: .6875rem; font-weight: 700; line-height: 1.4;
         }
-        .mk-blue  { background: #EFF6FF; color: var(--color-primary); }
-        .mk-green { background: #F0FDF4; color: var(--color-success); }
-        .mk-amber { background: #FFFBEB; color: var(--color-accent); }
+        .mk-blue  { background: rgba(14,165,233,.15); color: #38bdf8; }
+        .mk-green { background: rgba(34,197,94,.15);  color: #4ade80; }
+        .mk-amber { background: rgba(245,158,11,.15); color: #fbbf24; }
         .mock-chart-wrap {
-            background: #fff; border: 1px solid var(--color-border);
+            background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
             border-radius: 8px; padding: .875rem .875rem .625rem; margin-bottom: .875rem;
         }
         .mock-chart-lbl { font-size: .6875rem; color: var(--color-text-muted); font-weight: 600; margin-bottom: .5rem; }
@@ -154,10 +154,12 @@
     <nav class="sa-nav">
         <div class="container d-flex align-items-center justify-content-between">
             <a class="sa-nav__brand" href="/">
-                <svg class="sa-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
-                </svg>
-                Sales Analyzer
+                <span class="nav-logo-icon" aria-hidden="true">
+                    <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
+                    </svg>
+                </span>
+                <span class="brand-text">Sales Analyzer</span>
             </a>
             <a href="/app" class="btn-sa btn-sa--primary" style="font-size:.875rem;padding:.5rem 1.125rem;">
                 Empezar gratis
@@ -172,7 +174,7 @@
     <section class="hero">
         <div class="container" style="position:relative;z-index:1;">
             <div class="hero__eyebrow anim anim-1">Sin registro &middot; Sin instalación &middot; 100% gratis</div>
-            <h1 class = "anim anim-2">Convierte tus datos<br>en <span class="accent-text">decisiones</span></h1>
+            <h1 class="anim anim-2">Convierte tus datos<br>en <span class="accent-text">decisiones</span></h1>
             <p class="lead anim anim-3">
                 Sube tu Excel o CSV y obtén gráficas, métricas clave<br>
                 e informe PDF al instante. Sin conocimientos técnicos.
@@ -343,7 +345,6 @@
         </div>
     </footer>
 
-
 <script>
 (function () {
     // 1. Scroll reveal — feature cards, bento cards, CTA
@@ -357,9 +358,9 @@
     }, { threshold: 0.15 });
 
     [
-        { selector: '.feature-card',             baseDelay: 0.1,  step: 0.1  },
-        { selector: '.bento-card',               baseDelay: 0,    step: 0.15 },
-        { selector: '.l-section--dark .container', baseDelay: 0,  step: 0    }
+        { selector: '.feature-card',               baseDelay: 0.1,  step: 0.1  },
+        { selector: '.bento-card',                 baseDelay: 0,    step: 0.15 },
+        { selector: '.l-section--dark .container', baseDelay: 0,    step: 0    }
     ].forEach(function (group) {
         document.querySelectorAll(group.selector).forEach(function (el, i) {
             el.classList.add('will-reveal');
