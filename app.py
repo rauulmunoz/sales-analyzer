@@ -238,9 +238,9 @@ def analizar():
     resumen = (
         f"En el periodo analizado, las ventas totales alcanzaron {total_ventas:,.2f}€ "
         f"con un ticket medio de {ticket_medio:,.2f}€. "
-        f"El mejor mes fue {mejor_mes}, impulsado principalmente por {mejor_producto}, "
+        f"El mejor mes fue {mejor_mes_fmt}, impulsado principalmente por {mejor_producto}, "
         f"que fue el producto más vendido. "
-        f"Por otro lado, {peor_mes} fue el mes con peores resultados y {peor_producto} "
+        f"Por otro lado, {peor_mes_fmt} fue el mes con peores resultados y {peor_producto} "
         f"el producto con menor rendimiento. "
         f"El {mejor_dia.lower()} es el mejor día para vender, "
         f"mientras que el {peor_dia.lower()} registra las ventas más bajas. "
