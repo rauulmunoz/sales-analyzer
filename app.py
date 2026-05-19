@@ -214,10 +214,10 @@ def analizar():
     bottom5.columns = ['producto', 'total']
 
     fig_top5 = px.bar(top5, x='producto', y='total', title='Mejores 5 productos', labels={'total': 'Total ventas', 'producto': 'Producto'}, color_discrete_sequence=['#2ecc71'])
-    grafica_top5 = pio.to_html(fig_top5, full_html=False, include_plotlyjs='False')
+    grafica_top5 = pio.to_html(fig_top5, full_html=False, include_plotlyjs=False)
 
     fig_bottom5 = px.bar(bottom5, x='producto', y='total', title='Peores 5 productos', labels={'total': 'Total ventas', 'producto': 'Producto'}, color_discrete_sequence=['#e74c3c'])
-    grafica_bottom5 = pio.to_html(fig_bottom5, full_html=False, include_plotlyjs='False')
+    grafica_bottom5 = pio.to_html(fig_bottom5, full_html=False, include_plotlyjs=False)
 
     #Comparativa mes anterior
     if len(ventas_mes) >= 2:
