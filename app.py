@@ -302,7 +302,7 @@ def exportar():
     buf_mes = io.BytesIO(base64.b64decode(img_mes_b64)) if img_mes_b64 else None
     buf_prod = io.BytesIO(base64.b64decode(img_prod_b64)) if img_prod_b64 else None
 
-    ruta_pdf = 'uploads/informe.pdf'
+    ruta_pdf = os.path.join(UPLOADS_DIR, f'informe_{uuid.uuid4().hex}.pdf')
     c = canvas.Canvas(ruta_pdf, pagesize=A4)
     ancho, alto = A4
 
@@ -414,7 +414,16 @@ def exportar():
         c.drawImage(ImageReader(buf_prod), 50, alto - 630, width=ancho - 100, height=250)
 
     c.save()
-    return send_file(ruta_pdf, as_attachment=True)
+    response = send_file(ruta_pdf, as_attachment=True, download_name='informe_ventas.pdf')
+
+    @response.call_on_close
+    def limpiar():
+        try:
+            os.remove(ruta_pdf)
+        except:
+            pass
+    
+    return response
 
 if __name__=='__main__':
     app.run(debug=True)
