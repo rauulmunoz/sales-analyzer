@@ -232,8 +232,14 @@ def analizar():
     total_ventas = float(total_ventas)
 
     # Resumen ejecutivo
-    tendencia_texto = "bajista" if variacion and float(str(variacion)) < 0 else "alcista"
-    variacion_abs = abs(float(str(variacion))) if variacion else 0
+    if variacion is not None:
+        tendencia_texto = "bajista" if variacion < 0 else "alcista"
+        variacion_abs = abs(variacion)
+        variacion_texto = f"con un a variacion del {variacion_abs}% respecto al último mes."
+    else:
+        tendencia_texto = "estable"
+        variacion_abs = 0
+        variacion_texto = "con datos de un único mes."
 
     resumen = (
         f"En el periodo analizado, las ventas totales alcanzaron {total_ventas:,.2f}€ "
@@ -244,11 +250,11 @@ def analizar():
         f"el producto con menor rendimiento. "
         f"El {mejor_dia.lower()} es el mejor día para vender, "
         f"mientras que el {peor_dia.lower()} registra las ventas más bajas. "
-        f"La tendencia general de ventas es {tendencia_texto}, "
+        f"La tendencia general de ventas es {tendencia_texto}, {variacion_texto}"
         f"con una variación del {variacion_abs}% respecto al último mes."
     )
 
-    #Borra archjivo subido por privacidad
+    #Borra archivo subido por privacidad
     try:
         os.remove(ruta)
     except:
