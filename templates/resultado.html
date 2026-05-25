@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,57 +13,72 @@
             opacity: 0;
             transform: translateY(18px);
             transition: opacity 0.5s ease var(--reveal-delay, 0s),
-                        transform 0.5s ease var(--reveal-delay, 0s);
+                transform 0.5s ease var(--reveal-delay, 0s);
         }
-        .will-reveal.in-view { opacity: 1; transform: translateY(0); }
+
+        .will-reveal.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* Chart card hover lift */
         .chart-card {
             transition: transform 0.22s ease, box-shadow 0.22s ease;
         }
+
         .chart-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,0,0,.5);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .5);
         }
 
         /* Summary card — dark */
         .summary-card {
-            background: linear-gradient(135deg, rgba(14,165,233,.08) 0%, rgba(99,102,241,.08) 100%);
-            border: 1px solid rgba(14,165,233,.2);
+            background: linear-gradient(135deg, rgba(14, 165, 233, .08) 0%, rgba(99, 102, 241, .08) 100%);
+            border: 1px solid rgba(14, 165, 233, .2);
             border-radius: 16px;
             padding: 2rem 2.25rem;
             margin-bottom: 1.5rem;
             position: relative;
             overflow: hidden;
         }
+
         .summary-card::before {
             content: '';
             position: absolute;
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(14,165,233,.1) 0%, transparent 70%);
-            top: -70px; right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(14, 165, 233, .1) 0%, transparent 70%);
+            top: -70px;
+            right: -50px;
             pointer-events: none;
         }
+
         .summary-card__header {
             display: flex;
             align-items: center;
             gap: .875rem;
             margin-bottom: 1rem;
         }
+
         .summary-card__icon-box {
-            width: 46px; height: 46px;
+            width: 46px;
+            height: 46px;
             background: linear-gradient(135deg, #0ea5e9, #6366f1);
             border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 4px 14px rgba(14,165,233,.32);
+            box-shadow: 0 4px 14px rgba(14, 165, 233, .32);
         }
+
         .summary-card__title {
             font-size: 1.125rem;
             font-weight: 700;
             color: var(--color-text);
             margin: 0;
         }
+
         .summary-card__body {
             font-size: 1.0625rem;
             line-height: 1.85;
@@ -78,12 +94,14 @@
             flex-wrap: wrap;
             padding: 2.5rem 0 1.5rem;
         }
+
         .btn-sa--xl {
             padding: .9rem 2.25rem;
             font-size: 1.0625rem;
         }
     </style>
 </head>
+
 <body>
 
     <nav class="sa-nav">
@@ -91,7 +109,8 @@
             <a class="sa-nav__brand" href="/">
                 <span class="nav-logo-icon" aria-hidden="true">
                     <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
                     </svg>
                 </span>
                 <span class="brand-text">Sales Analyzer</span>
@@ -104,21 +123,30 @@
         <nav aria-label="Progreso" class="steps-indicator">
             <div class="step step--completed">
                 <div class="step__circle">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
                 </div>
                 <span class="step__label">Subir archivo</span>
             </div>
             <div class="step-connector step-connector--done"></div>
             <div class="step step--completed">
                 <div class="step__circle">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
                 </div>
                 <span class="step__label">Columnas</span>
             </div>
             <div class="step-connector step-connector--done"></div>
             <div class="step step--completed">
                 <div class="step__circle">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
                 </div>
                 <span class="step__label">Informe</span>
             </div>
@@ -132,8 +160,11 @@
         {% if filas_vacias > 0 or duplicados > 0 %}
         <div class="alert alert-success mb-4">
             <strong>✓ Limpieza aplicada:</strong>
-            {% if duplicados > 0 %}{{ duplicados }} duplicado{{ 's' if duplicados != 1 else '' }} eliminado{{ 's' if duplicados != 1 else '' }}{% endif %}
-            {% if filas_vacias > 0 %}{% if duplicados > 0 %} y {% endif %}{{ filas_vacias }} fila{{ 's' if filas_vacias != 1 else '' }} vacía{{ 's' if filas_vacias != 1 else '' }} eliminada{{ 's' if filas_vacias != 1 else '' }}{% endif %}
+            {% if duplicados > 0 %}{{ duplicados }} duplicado{{ 's' if duplicados != 1 else '' }} eliminado{{ 's' if
+            duplicados != 1 else '' }}{% endif %}
+            {% if filas_vacias > 0 %}{% if duplicados > 0 %} y {% endif %}{{ filas_vacias }} fila{{ 's' if filas_vacias
+            != 1 else '' }} vacía{{ 's' if filas_vacias != 1 else '' }} eliminada{{ 's' if filas_vacias != 1 else ''
+            }}{% endif %}
         </div>
         {% endif %}
 
@@ -142,7 +173,11 @@
             <div class="col-12 col-md-4">
                 <div class="kpi-card">
                     <div class="kpi-icon-wrap kpi-icon--blue">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
                     </div>
                     <div>
                         <div class="kpi-label">Total ventas</div>
@@ -153,7 +188,11 @@
             <div class="col-6 col-md-4">
                 <div class="kpi-card">
                     <div class="kpi-icon-wrap kpi-icon--blue">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
                     </div>
                     <div>
                         <div class="kpi-label">Ticket medio</div>
@@ -163,17 +202,22 @@
             </div>
             <div class="col-6 col-md-4">
                 <div class="kpi-card">
-                    <div class="kpi-icon-wrap {% if variacion and variacion >= 0 %}kpi-icon--green{% else %}kpi-icon--red{% endif %}">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"/></svg>
+                    <div
+                        class="kpi-icon-wrap {% if variacion and variacion >= 0 %}kpi-icon--green{% else %}kpi-icon--red{% endif %}">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+                        </svg>
                     </div>
                     <div>
                         <div class="kpi-label">Variación último mes</div>
                         {% if variacion is not none %}
-                            {% if variacion >= 0 %}
-                                <div class="kpi-value" style="color: var(--color-success)">▲ +{{ variacion }}%</div>
-                            {% else %}
-                                <div class="kpi-value" style="color: var(--color-danger)">▼ {{ variacion }}%</div>
-                            {% endif %}
+                        {% if variacion >= 0 %}
+                        <div class="kpi-value" style="color: var(--color-success)">▲ +{{ variacion }}%</div>
+                        {% else %}
+                        <div class="kpi-value" style="color: var(--color-danger)">▼ {{ variacion }}%</div>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -185,7 +229,11 @@
             <div class="col-6 col-md-6">
                 <div class="kpi-card">
                     <div class="kpi-icon-wrap kpi-icon--green">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"/></svg>
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+                        </svg>
                     </div>
                     <div>
                         <div class="kpi-label">Mejor mes</div>
@@ -196,7 +244,11 @@
             <div class="col-6 col-md-6">
                 <div class="kpi-card">
                     <div class="kpi-icon-wrap kpi-icon--green">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0"/></svg>
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0" />
+                        </svg>
                     </div>
                     <div>
                         <div class="kpi-label">Mejor producto</div>
@@ -211,7 +263,11 @@
             <div class="col-6 col-md-6">
                 <div class="kpi-card">
                     <div class="kpi-icon-wrap kpi-icon--slate">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181"/></svg>
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
+                        </svg>
                     </div>
                     <div>
                         <div class="kpi-label">Peor mes</div>
@@ -222,7 +278,11 @@
             <div class="col-6 col-md-6">
                 <div class="kpi-card">
                     <div class="kpi-icon-wrap kpi-icon--red">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                        </svg>
                     </div>
                     <div>
                         <div class="kpi-label">Peor producto</div>
@@ -237,7 +297,11 @@
             <div class="col-6 col-md-6">
                 <div class="kpi-card">
                     <div class="kpi-icon-wrap kpi-icon--green">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5"/></svg>
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5" />
+                        </svg>
                     </div>
                     <div>
                         <div class="kpi-label">Mejor día</div>
@@ -248,7 +312,11 @@
             <div class="col-6 col-md-6">
                 <div class="kpi-card">
                     <div class="kpi-icon-wrap kpi-icon--slate">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5"/></svg>
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5" />
+                        </svg>
                     </div>
                     <div>
                         <div class="kpi-label">Peor día</div>
@@ -263,7 +331,8 @@
             <div class="summary-card__header">
                 <div class="summary-card__icon-box" aria-hidden="true">
                     <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
                     </svg>
                 </div>
                 <h2 class="summary-card__title">¿Qué nos dicen los datos?</h2>
@@ -271,92 +340,192 @@
             <p class="summary-card__body">{{ resumen }}</p>
         </div>
 
-        <!-- Gráfica ventas por mes -->
-        <div class="chart-card">
+        <!-- Filtros dashboard -->
+        <div class="chart-card mb-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap mb-3">
+                <label class="fw-500" style="font-size:14px; color:var(--color-text-muted)">Filtrar por:</label>
+                <select id="filtro-trimestre" class="form-select form-select-sm" style="width:auto">
+                    <option value="all">Todo el año</option>
+                    <option value="q1">Q1 — Ene / Feb / Mar</option>
+                    <option value="q2">Q2 — Abr / May / Jun</option>
+                    <option value="q3">Q3 — Jul / Ago / Sep</option>
+                    <option value="q4">Q4 — Oct / Nov / Dic</option>
+                </select>
+            </div>
             <h2 class="chart-card__title">Ventas por mes</h2>
-            {{ grafica|safe }}
+            <div id="grafica-mes"></div>
         </div>
 
         <!-- Gráfica ventas por producto -->
         <div class="chart-card">
             <h2 class="chart-card__title">Ventas por producto</h2>
-            {{ grafica2|safe }}
+            <div id="grafica-producto"></div>
         </div>
 
-        <!-- Mejores 5 y Peores 5 -->
-        <div class="row g-3 mb-4">
+        <div class ="row g-3 mb-4">
             <div class="col-md-6">
                 <div class="chart-card">
                     <h2 class="chart-card__title">🏆 Mejores 5 productos</h2>
-                    {{ grafica_top5|safe }}
+                    <div id="grafica-top5"></div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="chart-card">
                     <h2 class="chart-card__title">⚠️ Peores 5 productos</h2>
-                    {{ grafica_bottom5|safe }}
+                    <div id="grafica-bottom5"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Acciones -->
-        <div class="actions-section">
-            <form action="/exportar" method="POST" id="export-form">
-                <input type="hidden" name="total_ventas" value="{{ total_ventas }}">
-                <input type="hidden" name="mejor_mes" value="{{ mejor_mes }}">
-                <input type="hidden" name="mejor_producto" value="{{ mejor_producto }}">
-                <input type="hidden" name="peor_mes" value="{{ peor_mes }}">
-                <input type="hidden" name="peor_producto" value="{{ peor_producto }}">
-                <input type="hidden" name="ticket_medio" value="{{ ticket_medio }}">
-                <input type="hidden" name="variacion" value="{{ variacion }}">
-                <input type="hidden" name="mejor_dia" value="{{ mejor_dia }}">
-                <input type="hidden" name="peor_dia" value="{{ peor_dia }}">
-                <input type="hidden" name="resumen" value="{{ resumen }}">
-                <input type="hidden" name="img_mes_b64" value="{{ img_mes_b64 }}">
-                <input type="hidden" name="img_prod_b64" value="{{ img_prod_b64 }}">
-                <button type="submit" class="btn-sa btn-sa--success btn-sa--xl" id="export-btn">
-                    📄 Exportar PDF
-                </button>
-            </form>
-            <a href="/app" class="btn-sa btn-sa--ghost btn-sa--xl">↩ Analizar otro archivo</a>
-        </div>
+    <!-- Acciones -->
+    <div class="actions-section">
+        <form action="/exportar" method="POST" id="export-form">
+            <input type="hidden" name="total_ventas" value="{{ total_ventas }}">
+            <input type="hidden" name="mejor_mes" value="{{ mejor_mes }}">
+            <input type="hidden" name="mejor_producto" value="{{ mejor_producto }}">
+            <input type="hidden" name="peor_mes" value="{{ peor_mes }}">
+            <input type="hidden" name="peor_producto" value="{{ peor_producto }}">
+            <input type="hidden" name="ticket_medio" value="{{ ticket_medio }}">
+            <input type="hidden" name="variacion" value="{{ variacion }}">
+            <input type="hidden" name="mejor_dia" value="{{ mejor_dia }}">
+            <input type="hidden" name="peor_dia" value="{{ peor_dia }}">
+            <input type="hidden" name="resumen" value="{{ resumen }}">
+            <input type="hidden" name="img_mes_b64" value="{{ img_mes_b64 }}">
+            <input type="hidden" name="img_prod_b64" value="{{ img_prod_b64 }}">
+            <button type="submit" class="btn-sa btn-sa--success btn-sa--xl" id="export-btn">
+                📄 Exportar PDF
+            </button>
+        </form>
+        <a href="/app" class="btn-sa btn-sa--ghost btn-sa--xl">↩ Analizar otro archivo</a>
+    </div>
 
     </div>
 
     <script>
-    (function () {
-        // Scroll reveal
-        var io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('in-view');
-                    io.unobserve(entry.target);
-                }
+        (function () {
+            // Scroll reveal
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        io.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.kpi-card, .chart-card, .summary-card').forEach(function (el) {
+                el.classList.add('will-reveal');
+                io.observe(el);
             });
-        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.kpi-card, .chart-card, .summary-card').forEach(function (el) {
-            el.classList.add('will-reveal');
-            io.observe(el);
-        });
-
-        document.querySelectorAll('.row').forEach(function (row) {
-            row.querySelectorAll('.kpi-card, .chart-card').forEach(function (el, i) {
-                el.style.setProperty('--reveal-delay', (i * 0.09) + 's');
+            document.querySelectorAll('.row').forEach(function (row) {
+                row.querySelectorAll('.kpi-card, .chart-card').forEach(function (el, i) {
+                    el.style.setProperty('--reveal-delay', (i * 0.09) + 's');
+                });
             });
-        });
 
-        // Export form feedback
-        document.getElementById('export-form').addEventListener('submit', function () {
-            var btn = document.getElementById('export-btn');
-            btn.disabled = true;
-            btn.textContent = 'Generando PDF...';
-            setTimeout(function () {
-                btn.disabled = false;
-                btn.innerHTML = '📄 Exportar PDF';
-            }, 4000);
+            // Export form feedback
+            document.getElementById('export-form').addEventListener('submit', function () {
+                var btn = document.getElementById('export-btn');
+                btn.disabled = true;
+                btn.textContent = 'Generando PDF...';
+                setTimeout(function () {
+                    btn.disabled = false;
+                    btn.innerHTML = '📄 Exportar PDF';
+                }, 4000);
+            });
+        })();
+    </script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script>
+        (function () {
+        var datosMes = {{ ventas_mes_json|safe }};
+        var datosProd = {{ ventas_prod_json|safe }};
+        var datosTop5 = {{ top5_json|safe }};
+        var datosBottom5 = {{ bottom5_json|safe }};
+
+        Plotly.newPlot('grafica-top5', [{
+            x: datosTop5.map(function (d) { return d.producto; }),
+            y: datosTop5.map(function (d) { return d.total; }),
+            type: 'bar',
+            marker: { color: '#2ecc71' },
+            name: 'Top 5'
+        }], {
+            margin: { t: 20, r: 20, b: 80, l: 60 },
+            xaxis: { title: 'Producto' },
+            yaxis: { title: 'Total ventas' },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#ffffff'}
+        }, { responsive: true });
+
+        Plotly.newPlot('grafica-bottom5', [{
+            x: datosBottom5.map(function (d) { return d.producto; }),
+            y: datosBottom5.map(function (d) { return d.total; }),
+            type: 'bar',
+            marker: { color: '#e74c3c' },
+            name: 'Peores 5'
+        }], {
+            margin: { t: 20, r: 20, b: 80, l: 60 },
+            xaxis: { title: 'Producto' },
+            yaxis: { title: 'Total ventas' },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#ffffff'}
+        }, { responsive: true });
+
+        function filtrarTrimestre(datos, trimestre) {
+            if (trimestre === 'all') return datos;
+            var meses = { q1: ['01', '02', '03'], q2: ['04', '05', '06'], q3: ['07', '08', '09'], q4: ['10', '11', '12'] };
+            return datos.filter(function (d) {
+                var mes = d.mes.split('-')[1];
+                return meses[trimestre].indexOf(mes) !== -1;
+            });
+        }
+
+        function dibujarMes(datos) {
+            Plotly.newPlot('grafica-mes', [{
+                x: datos.map(function (d) { return d.mes; }),
+                y: datos.map(function (d) { return d.total; }),
+                type: 'bar',
+                marker: { color: '#1E40AF' },
+                name: 'Ventas'
+            }], {
+                margin: { t: 20, r: 20, b: 60, l: 60 },
+                xaxis: { title: 'Mes', type: 'category' },
+                yaxis: { title: 'Total ventas' },
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                font: { color: '#ffffff'}
+            }, { responsive: true });
+        }
+
+        function dibujarProducto(datos) {
+            Plotly.newPlot('grafica-producto', [{
+                x: datos.map(function (d) { return d.producto; }),
+                y: datos.map(function (d) { return d.total; }),
+                type: 'bar',
+                marker: { color: '#1E40AF' },
+                name: 'Ventas'
+            }], {
+                margin: { t: 20, r: 20, b: 80, l: 60 },
+                xaxis: { title: 'Producto' },
+                yaxis: { title: 'Total ventas' },
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                font: { color: '#ffffff'}
+            }, { responsive: true });
+        }
+
+        dibujarMes(datosMes);
+        dibujarProducto(datosProd);
+
+        document.getElementById('filtro-trimestre').addEventListener('change', function () {
+            var filtrados = filtrarTrimestre(datosMes, this.value);
+            dibujarMes(filtrados);
         });
-    })();
+}) ();
     </script>
 </body>
+
 </html>

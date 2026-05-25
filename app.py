@@ -133,14 +133,7 @@ def analizar():
     df_mes = ventas_mes.reset_index()
     df_mes.columns = ['mes', 'total']
     df_mes['mes'] = df_mes['mes'].astype(str)
-    fig_mes = px.bar(df_mes, x = "mes", y = "total", title = 'Ventas por mes', labels = {'total': 'Total ventas', 'mes': 'Mes'})
-    fig_mes.update_traces(marker_color='#1E40AF')
-
-    #Línea de tendencia
-    z = np.polyfit(range(len(df_mes)), df_mes['total'], 1)
-    p = np.poly1d(z)
-    fig_mes.add_scatter(x=df_mes['mes'], y=p(range(len(df_mes))), mode='lines', name='Tendencia', line=dict(color='red', dash='dash'))
-    grafica = pio.to_html(fig_mes, full_html=False, include_plotlyjs='cdn')
+    
 
     #Guardar PNG para PDF con matplotlib
     buf_mes = io.BytesIO()
@@ -160,9 +153,6 @@ def analizar():
     ventas_producto = df.groupby('producto')['precio'].sum().sort_values(ascending=False)
     df_producto = ventas_producto.reset_index()
     df_producto.columns = ['producto', 'total']
-    fig_producto = px.bar(df_producto, x='producto', y='total', title='Ventas por producto', labels={'total': 'Total ventas', 'producto': 'Producto'})
-    fig_producto.update_traces(marker_color='#1E40AF')
-    grafica2 = pio.to_html(fig_producto, full_html=False, include_plotlyjs='cdn')
 
     #Guardar PNG para PDF con matplotlib
     buf_prod = io.BytesIO()
@@ -214,11 +204,8 @@ def analizar():
     bottom5 = ventas_producto.tail(5).reset_index()
     bottom5.columns = ['producto', 'total']
 
-    fig_top5 = px.bar(top5, x='producto', y='total', title='Mejores 5 productos', labels={'total': 'Total ventas', 'producto': 'Producto'}, color_discrete_sequence=['#2ecc71'])
-    grafica_top5 = pio.to_html(fig_top5, full_html=False, include_plotlyjs=False)
-
-    fig_bottom5 = px.bar(bottom5, x='producto', y='total', title='Peores 5 productos', labels={'total': 'Total ventas', 'producto': 'Producto'}, color_discrete_sequence=['#e74c3c'])
-    grafica_bottom5 = pio.to_html(fig_bottom5, full_html=False, include_plotlyjs=False)
+    top5_json = json.dumps(top5.to_dict(orient='records'))
+    bottom5_json = json.dumps(bottom5.to_dict(orient='records'))
 
     #Comparativa mes anterior
     if len(ventas_mes) >= 2:
@@ -267,8 +254,6 @@ def analizar():
 
 
     return render_template('resultado.html',
-        grafica = grafica,
-        grafica2 = grafica2,
         total_ventas = total_ventas,
         mejor_mes = mejor_mes,
         mejor_mes_fmt = mejor_mes_fmt,
@@ -279,8 +264,8 @@ def analizar():
         variacion = variacion,
         filas_vacias = filas_vacias,
         duplicados = duplicados,
-        grafica_top5 = grafica_top5,
-        grafica_bottom5 = grafica_bottom5,
+        top5_json = top5_json,
+        bottom5_json = bottom5_json,
         ticket_medio = ticket_medio,
         mejor_dia = mejor_dia,
         peor_dia = peor_dia,
