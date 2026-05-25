@@ -227,7 +227,7 @@ def analizar():
     if variacion is not None:
         tendencia_texto = "bajista" if variacion < 0 else "alcista"
         variacion_abs = abs(variacion)
-        variacion_texto = f"con un a variacion del {variacion_abs}% respecto al último mes."
+        variacion_texto = f"con una variacion del {variacion_abs}% respecto al último mes."
     else:
         tendencia_texto = "estable"
         variacion_abs = 0
@@ -243,7 +243,6 @@ def analizar():
         f"El {mejor_dia.lower()} es el mejor día para vender, "
         f"mientras que el {peor_dia.lower()} registra las ventas más bajas. "
         f"La tendencia general de ventas es {tendencia_texto}, {variacion_texto}"
-        f"con una variación del {variacion_abs}% respecto al último mes."
     )
 
     #Borra archivo subido por privacidad
@@ -279,6 +278,7 @@ def analizar():
 @app.route('/exportar', methods=['POST'])
 def exportar():
     from datetime import datetime
+    from textwrap import wrap
 
     total_ventas = float(request.form['total_ventas'])
     mejor_mes = request.form['mejor_mes']
@@ -299,112 +299,122 @@ def exportar():
     c = canvas.Canvas(ruta_pdf, pagesize=A4)
     ancho, alto = A4
 
-    COLOR_AZUL = (0.24, 0.57, 0.87)
-    COLOR_VERDE = (0.18, 0.80, 0.44)
-    COLOR_ROJO = (0.91, 0.30, 0.24)
+    # Colores
+    AZUL_OSC = (0.118, 0.227, 0.373)   # #1e3a5f
+    AZUL_MED = (0.118, 0.251, 0.686)   # #1e40af
+    AZUL_CLR = (0.576, 0.773, 1.0)     # #93c5fd
+    VERDE    = (0.051, 0.431, 0.247)   # #0d6e3f
+    ROJO     = (0.753, 0.224, 0.169)   # #c0392b
+    GRIS     = (0.533, 0.533, 0.533)
+    NEGRO    = (0.067, 0.067, 0.067)
 
-    def dibujar_tarjeta(cx, y, anch, alt, titulo, valor, accent):
-        c.setFillColorRGB(0.95, 0.95, 0.95)
-        c.roundRect(cx, y, anch, alt, 5, fill=1, stroke=0)
-        c.setFillColorRGB(*accent)
-        c.rect(cx, y, 5, alt, fill=1, stroke=0)
-        c.setFillColorRGB(0.5, 0.5, 0.5)
-        c.setFont('Helvetica', 8)
-        c.drawCentredString(cx + anch / 2, y + alt - 15, titulo)
-        c.setFillColorRGB(0.1, 0.1, 0.1)
-        c.setFont('Helvetica-Bold', 10)
-        c.drawCentredString(cx + anch / 2, y + alt / 2 - 5, valor)
+    # ── CABECERA AZUL OSCURO ──────────────────────────────────
+    c.setFillColorRGB(*AZUL_OSC)
+    c.rect(0, alto - 80, ancho, 80, fill=1, stroke=0)
 
-    # --- PÁGINA 1: Métricas ---
-
-    c.setFillColorRGB(0.1, 0.1, 0.1)
-    c.setFont('Helvetica-Bold', 22)
-    c.drawString(50, alto - 60, 'Informe de ventas')
-    c.setFont('Helvetica', 11)
-    c.setFillColorRGB(0.5, 0.5, 0.5)
-    c.drawString(50, alto - 80, 'Resultados generados automaticamente')
+    # Título y subtítulo
+    c.setFillColorRGB(1, 1, 1)
+    c.setFont('Helvetica-Bold', 20)
+    c.drawString(40, alto - 38, 'Informe de ventas')
     c.setFont('Helvetica', 9)
-    c.drawString(50, alto - 100, f'Generado el: {datetime.now().strftime("%d/%m/%Y %H:%M")}')
+    c.setFillColorRGB(*AZUL_CLR)
+    c.drawString(40, alto - 54, f'Generado el {datetime.now().strftime("%d/%m/%Y %H:%M")}  ·  Sales Analyzer')
 
-    c.setStrokeColorRGB(0.85, 0.85, 0.85)
-    c.setLineWidth(1)
-    c.line(50, alto - 115, ancho - 50, alto - 115)
+    # Pastilla total ventas (esquina derecha)
+    pastilla_x = ancho - 160
+    c.setFillColorRGB(0.2, 0.45, 0.65)
+    c.roundRect(pastilla_x, alto - 62, 120, 34, 6, fill=1, stroke=0)
+    c.setFillColorRGB(*AZUL_CLR)
+    c.setFont('Helvetica', 8)
+    c.drawCentredString(pastilla_x + 60, alto - 36, 'Total ventas')
+    c.setFillColorRGB(1, 1, 1)
+    c.setFont('Helvetica-Bold', 13)
+    c.drawCentredString(pastilla_x + 60, alto - 52, f'{total_ventas:,.2f} EUR')
 
-    # Fila 1: métricas generales
-    tarjetas_f1 = [
-        ('Total ventas', f'{total_ventas:.2f} EUR', COLOR_AZUL),
-        ('Ticket medio', f'{ticket_medio:.2f} EUR', COLOR_AZUL),
-        ('Variacion ultimo mes', f'{variacion}%', COLOR_AZUL),
+    # ── FILA KPIs ─────────────────────────────────────────────
+    kpi_y = alto - 155
+    kpis = [
+        ('Ticket medio',     f'{ticket_medio:,.2f} EUR', AZUL_MED, (0.875, 0.929, 1.0)),
+        ('Mejor mes',        mejor_mes,                  VERDE,     (0.875, 0.961, 0.925)),
+        ('Variación',        f'▲ {variacion}%' if variacion and float(variacion) >= 0 else f'▼ {variacion}%',
+                             VERDE if variacion and float(variacion) >= 0 else ROJO,
+                             (0.875, 0.961, 0.925) if variacion and float(variacion) >= 0 else (0.992, 0.910, 0.910)),
     ]
-    x = 50
-    y = alto - 195
-    ancho_t1 = 155
-    for titulo, valor, color in tarjetas_f1:
-        dibujar_tarjeta(x, y, ancho_t1, 55, titulo, valor, color)
-        x += ancho_t1 + 10
+    kpi_w = (ancho - 80) / 3
+    for i, (label, valor, color_val, color_bg) in enumerate(kpis):
+        x = 40 + i * (kpi_w + 10)
+        c.setFillColorRGB(*color_bg)
+        c.roundRect(x, kpi_y, kpi_w - 10, 48, 5, fill=1, stroke=0)
+        c.setFillColorRGB(*GRIS)
+        c.setFont('Helvetica', 8)
+        c.drawString(x + 10, kpi_y + 34, label)
+        c.setFillColorRGB(*color_val)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(x + 10, kpi_y + 16, valor)
 
-    # Fila 2: mejores
-    tarjetas_f2 = [
-        ('Mejor mes', str(mejor_mes), COLOR_VERDE),
-        ('Mejor producto', mejor_producto, COLOR_VERDE),
+    # ── FILA MEJOR / PEOR ─────────────────────────────────────
+    fila2_y = kpi_y - 65
+    fila2 = [
+        ('Mejor producto', mejor_producto, VERDE,  (0.875, 0.961, 0.925)),
+        ('Peor producto',  peor_producto,  ROJO,   (0.992, 0.910, 0.910)),
+        ('Mejor día',      mejor_dia,      VERDE,  (0.875, 0.961, 0.925)),
+        ('Peor día',       peor_dia,       ROJO,   (0.992, 0.910, 0.910)),
     ]
-    x = 50
-    y = alto - 270
-    ancho_t2 = 240
-    for titulo, valor, color in tarjetas_f2:
-        dibujar_tarjeta(x, y, ancho_t2, 50, titulo, valor, color)
-        x += ancho_t2 + 10
+    kpi_w2 = (ancho - 80) / 4
+    for i, (label, valor, color_val, color_bg) in enumerate(fila2):
+        x = 40 + i * (kpi_w2 + 6)
+        c.setFillColorRGB(*color_bg)
+        c.roundRect(x, fila2_y, kpi_w2 - 6, 44, 5, fill=1, stroke=0)
+        c.setFillColorRGB(*GRIS)
+        c.setFont('Helvetica', 8)
+        c.drawString(x + 8, fila2_y + 30, label)
+        c.setFillColorRGB(*color_val)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(x + 8, fila2_y + 14, valor[:18])
 
-    # Fila 3: peores
-    tarjetas_f3 = [
-        ('Peor mes', str(peor_mes), COLOR_ROJO),
-        ('Peor producto', peor_producto, COLOR_ROJO),
-    ]
-    x = 50
-    y = alto - 340
-    for titulo, valor, color in tarjetas_f3:
-        dibujar_tarjeta(x, y, ancho_t2, 50, titulo, valor, color)
-        x += ancho_t2 + 10
+    # ── LÍNEA SEPARADORA ──────────────────────────────────────
+    sep_y = fila2_y - 18
+    c.setStrokeColorRGB(0.878, 0.878, 0.878)
+    c.setLineWidth(0.5)
+    c.line(40, sep_y, ancho - 40, sep_y)
 
-    # Fila 4: días
-    tarjetas_f4 = [
-        ('Mejor dia', mejor_dia, COLOR_VERDE),
-        ('Peor dia', peor_dia, COLOR_ROJO),
-    ]
-    x = 50
-    y = alto - 410
-    for titulo, valor, color in tarjetas_f4:
-        dibujar_tarjeta(x, y, ancho_t2, 50, titulo, valor, color)
-        x += ancho_t2 + 10
+    # ── RESUMEN EJECUTIVO ─────────────────────────────────────
+    c.setFillColorRGB(*AZUL_OSC)
+    c.setFont('Helvetica-Bold', 11)
+    c.drawString(40, sep_y - 18, '¿Qué nos dicen los datos?')
 
-    # Resumen ejecutivo
-    c.setFillColorRGB(0.1, 0.1, 0.1)
-    c.setFont('Helvetica-Bold', 12)
-    c.drawString(50, alto - 460, '¿Qué nos dicen los datos?')
-    
-    c.setFont('Helvetica', 10)
-    c.setFillColorRGB(0.3, 0.3, 0.3)
-    
-    # Dividir el texto en líneas para que quepa
-    from textwrap import wrap
-    lineas = wrap(resumen, width=90)
-    y_texto = alto - 480
+    c.setFont('Helvetica', 9)
+    c.setFillColorRGB(*NEGRO)
+    lineas = wrap(resumen, width=100)
+    y_texto = sep_y - 34
     for linea in lineas:
-        c.drawString(50, y_texto, linea)
-        y_texto -= 15
+        if y_texto < 40:
+            break
+        c.drawString(40, y_texto, linea)
+        y_texto -= 13
 
-    # --- PÁGINA 2: Gráficas ---
+    # ── PÁGINA 2: GRÁFICAS ────────────────────────────────────
     c.showPage()
-    c.setFillColorRGB(0.1, 0.1, 0.1)
-    c.setFont('Helvetica-Bold', 14)
-    c.drawString(50, alto - 60, 'Ventas por mes')
-    if buf_mes:
-        c.drawImage(ImageReader(buf_mes), 50, alto - 330, width=ancho - 100, height=250)
 
+    c.setFillColorRGB(*AZUL_OSC)
+    c.rect(0, alto - 50, ancho, 50, fill=1, stroke=0)
+    c.setFillColorRGB(1, 1, 1)
     c.setFont('Helvetica-Bold', 14)
-    c.drawString(50, alto - 360, 'Ventas por producto')
+    c.drawString(40, alto - 32, 'Análisis gráfico')
+    c.setFont('Helvetica', 9)
+    c.setFillColorRGB(*AZUL_CLR)
+    c.drawString(40, alto - 44, 'Sales Analyzer')
+
+    c.setFillColorRGB(*AZUL_OSC)
+    c.setFont('Helvetica-Bold', 11)
+    c.drawString(40, alto - 75, 'Ventas por mes')
+    if buf_mes:
+        c.drawImage(ImageReader(buf_mes), 40, alto - 340, width=ancho - 80, height=260)
+
+    c.setFont('Helvetica-Bold', 11)
+    c.drawString(40, alto - 360, 'Ventas por producto')
     if buf_prod:
-        c.drawImage(ImageReader(buf_prod), 50, alto - 630, width=ancho - 100, height=250)
+        c.drawImage(ImageReader(buf_prod), 40, alto - 640, width=ancho - 80, height=260)
 
     c.save()
     response = send_file(ruta_pdf, as_attachment=True, download_name='informe_ventas.pdf')
@@ -415,7 +425,7 @@ def exportar():
             os.remove(ruta_pdf)
         except:
             pass
-    
+
     return response
 
 if __name__=='__main__':
