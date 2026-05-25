@@ -17,6 +17,7 @@ from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 import uuid
+import json
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', "pechugadepollo")
@@ -231,6 +232,10 @@ def analizar():
 
     total_ventas = float(total_ventas)
 
+    ventas_mes_json = json.dumps(df_mes.to_dict(orient='records'))
+    ventas_prod_json = json.dumps(df_producto.to_dict(orient='records'))
+    ventas_dia_json = json.dumps(df.groupby('dia_semana')['precio'].sum().reset_index().rename(columns={'precio': 'total'}).to_dict(orient='records'))
+
     # Resumen ejecutivo
     if variacion is not None:
         tendencia_texto = "bajista" if variacion < 0 else "alcista"
@@ -281,6 +286,9 @@ def analizar():
         peor_dia = peor_dia,
         img_mes_b64 = img_mes_b64,
         img_prod_b64 = img_prod_b64,
+        ventas_mes_json = ventas_mes_json,
+        ventas_prod_json = ventas_prod_json,
+        ventas_dia_json = ventas_dia_json,
         resumen = resumen)
 
 @app.route('/exportar', methods=['POST'])
