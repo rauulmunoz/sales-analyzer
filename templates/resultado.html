@@ -371,6 +371,24 @@
             <div id="grafica-mes"></div>
         </div>
 
+        <!-- Tabla detalle mensual -->
+        <div class="chart-card mb-3">
+            <h2 class="chart-card__title">Detalle mensual</h2>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0" id="tabla-mensual">
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Total ventas</th>
+                            <th>Variación</th>
+                            <th>Producto top</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-mensual-body"></tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Gráfica ventas por producto -->
         <div class="chart-card">
             <h2 class="chart-card__title">Ventas por producto</h2>
@@ -533,6 +551,32 @@
         dibujarMes(datosMes);
         dibujarProducto(datosProd);
 
+        var datosTopProdMes = {{ top_prod_mes_json|safe }};
+
+        function renderTabla(datos) {
+            var tbody = document.getElementById('tabla-mensual-body');
+            var topProdMap = {};
+            datosTopProdMes.forEach(function(d) { topProdMap[d.mes] = d.producto; });
+
+            var html = '';
+            datos.forEach(function(d, i) {
+                var variacion = '';
+                if (i > 0) {
+                    var prev = datos[i-1].total;
+                    var diff = ((d.total - prev) / prev * 100).toFixed(1);
+                    var up = diff >= 0;
+                    variacion = '<span style="color:' + (up ? '#2ecc71' : '#e74c3c') + '">' + (up ? '▲ +' : '▼ ') + diff + '%</span>';
+                } else {
+                    variacion = '<span style="color:#64748b">—</span>';
+                }
+                var prod = topProdMap[d.mes] || '—';
+                html += '<tr><td>' + d.mes + '</td><td>' + d.total.toLocaleString('es-ES', {minimumFractionDigits:2}) + ' €</td><td>' + variacion + '</td><td>' + prod + '</td></tr>';
+            });
+            tbody.innerHTML = html;
+        }
+
+        renderTabla(datosMes);
+
         var datosDia = {{ ventas_dia_json| safe }};
 
         var ordenDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -572,7 +616,9 @@
         function aplicarFiltros() {
             var trimestre = document.getElementById('filtro-trimestre').value;
             var mes = document.getElementById('filtro-mes').value;
-            dibujarMes(filtrarDatos(datosMes, trimestre, mes));
+            var filtrados = filtrarDatos(datosMes, trimestre, mes);
+            dibujarMes(filtrados);
+            renderTabla(filtrados);
         }
 
         document.getElementById('filtro-trimestre').addEventListener('change', function () {

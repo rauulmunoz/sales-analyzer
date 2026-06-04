@@ -231,6 +231,10 @@ def analizar():
     ventas_mes_json = json.dumps(df_mes.to_dict(orient='records'))
     ventas_prod_json = json.dumps(df_producto.to_dict(orient='records'))
     ventas_dia_json = json.dumps(df.groupby('dia_semana')['precio'].sum().reset_index().rename(columns={'precio': 'total'}).to_dict(orient='records'))
+    top_producto_mes = df.groupby(['mes', 'producto'])['precio'].sum().reset_index()
+    top_producto_mes['mes'] = top_producto_mes['mes'].astype(str)
+    top_producto_mes = top_producto_mes.loc[top_producto_mes.groupby('mes')['precio'].idxmax()]
+    top_prod_mes_json = json.dumps(top_producto_mes[['mes', 'producto']].to_dict(orient='records'))
 
     # Resumen ejecutivo
     if variacion is not None:
@@ -283,6 +287,7 @@ def analizar():
         ventas_mes_json = ventas_mes_json,
         ventas_prod_json = ventas_prod_json,
         ventas_dia_json = ventas_dia_json,
+        top_prod_mes_json = top_prod_mes_json,
         resumen = resumen)
 
 @app.route('/exportar', methods=['POST'])
