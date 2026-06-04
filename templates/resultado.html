@@ -362,6 +362,12 @@
             <div id="grafica-producto"></div>
         </div>
 
+        <!-- Gráfica ventas por día de la semana -->
+        <div class="chart-card">
+            <h2 class="chart-card__title">Ventas por día de la semana</h2>
+            <div id="grafica-dia"></div>
+        </div>
+
         <div class ="row g-3 mb-4">
             <div class="col-md-6">
                 <div class="chart-card">
@@ -519,6 +525,30 @@
 
         dibujarMes(datosMes);
         dibujarProducto(datosProd);
+
+        var datosDia = {{ ventas_dia_json|safe }};
+
+        var ordenDias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+        datosDia.sort(function(a, b) {
+            return ordenDias.indexOf(a.dia_semana) - ordenDias.indexOf(b.dia_semana);
+        });
+
+        Plotly.newPlot('grafica-dia', [{
+            x: datosDia.map(function(d) { return d.dia_semana; }),
+            y: datosDia.map(function(d) { return d.total; }),
+            type: 'bar',
+            marker: { color: datosDia.map(function(d) {
+                return d.total === Math.max.apply(null, datosDia.map(function(x){ return x.total; })) ? '#2ecc71' : '#1E40AF';
+            })},
+            name: 'Ventas'
+        }], {
+            margin: { t: 20, r: 20, b: 60, l: 60 },
+            xaxis: { title: 'Día' },
+            yaxis: { title: 'Total ventas' },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#ffffff' }
+        }, { responsive: true });
 
         document.getElementById('filtro-trimestre').addEventListener('change', function () {
             var filtrados = filtrarTrimestre(datosMes, this.value);
