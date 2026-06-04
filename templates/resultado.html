@@ -346,10 +346,25 @@
                 <label class="fw-500" style="font-size:14px; color:var(--color-text-muted)">Filtrar por:</label>
                 <select id="filtro-trimestre" class="form-select form-select-sm" style="width:auto">
                     <option value="all">Todo el año</option>
-                    <option value="q1">Q1 — Ene / Feb / Mar</option>
-                    <option value="q2">Q2 — Abr / May / Jun</option>
-                    <option value="q3">Q3 — Jul / Ago / Sep</option>
-                    <option value="q4">Q4 — Oct / Nov / Dic</option>
+                    <option value="q1">Ene / Feb / Mar</option>
+                    <option value="q2">Abr / May / Jun</option>
+                    <option value="q3">Jul / Ago / Sep</option>
+                    <option value="q4">Oct / Nov / Dic</option>
+                </select>
+                <select id="filtro-mes" class="form-select form-select-sm" style="width:auto">
+                    <option value="all">Todos los meses</option>
+                    <option value="01">Enero</option>
+                    <option value="02">Febrero</option>
+                    <option value="03">Marzo</option>
+                    <option value="04">Abril</option>
+                    <option value="05">Mayo</option>
+                    <option value="06">Junio</option>
+                    <option value="07">Julio</option>
+                    <option value="08">Agosto</option>
+                    <option value="09">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
                 </select>
             </div>
             <h2 class="chart-card__title">Ventas por mes</h2>
@@ -368,7 +383,7 @@
             <div id="grafica-dia"></div>
         </div>
 
-        <div class ="row g-3 mb-4">
+        <div class="row g-3 mb-4">
             <div class="col-md-6">
                 <div class="chart-card">
                     <h2 class="chart-card__title">🏆 Mejores 5 productos</h2>
@@ -383,27 +398,27 @@
             </div>
         </div>
 
-    <!-- Acciones -->
-    <div class="actions-section">
-        <form action="/exportar" method="POST" id="export-form">
-            <input type="hidden" name="total_ventas" value="{{ total_ventas }}">
-            <input type="hidden" name="mejor_mes" value="{{ mejor_mes }}">
-            <input type="hidden" name="mejor_producto" value="{{ mejor_producto }}">
-            <input type="hidden" name="peor_mes" value="{{ peor_mes }}">
-            <input type="hidden" name="peor_producto" value="{{ peor_producto }}">
-            <input type="hidden" name="ticket_medio" value="{{ ticket_medio }}">
-            <input type="hidden" name="variacion" value="{{ variacion }}">
-            <input type="hidden" name="mejor_dia" value="{{ mejor_dia }}">
-            <input type="hidden" name="peor_dia" value="{{ peor_dia }}">
-            <input type="hidden" name="resumen" value="{{ resumen }}">
-            <input type="hidden" name="img_mes_b64" value="{{ img_mes_b64 }}">
-            <input type="hidden" name="img_prod_b64" value="{{ img_prod_b64 }}">
-            <button type="submit" class="btn-sa btn-sa--success btn-sa--xl" id="export-btn">
-                📄 Exportar PDF
-            </button>
-        </form>
-        <a href="/app" class="btn-sa btn-sa--ghost btn-sa--xl">↩ Analizar otro archivo</a>
-    </div>
+        <!-- Acciones -->
+        <div class="actions-section">
+            <form action="/exportar" method="POST" id="export-form">
+                <input type="hidden" name="total_ventas" value="{{ total_ventas }}">
+                <input type="hidden" name="mejor_mes" value="{{ mejor_mes }}">
+                <input type="hidden" name="mejor_producto" value="{{ mejor_producto }}">
+                <input type="hidden" name="peor_mes" value="{{ peor_mes }}">
+                <input type="hidden" name="peor_producto" value="{{ peor_producto }}">
+                <input type="hidden" name="ticket_medio" value="{{ ticket_medio }}">
+                <input type="hidden" name="variacion" value="{{ variacion }}">
+                <input type="hidden" name="mejor_dia" value="{{ mejor_dia }}">
+                <input type="hidden" name="peor_dia" value="{{ peor_dia }}">
+                <input type="hidden" name="resumen" value="{{ resumen }}">
+                <input type="hidden" name="img_mes_b64" value="{{ img_mes_b64 }}">
+                <input type="hidden" name="img_prod_b64" value="{{ img_prod_b64 }}">
+                <button type="submit" class="btn-sa btn-sa--success btn-sa--xl" id="export-btn">
+                    📄 Exportar PDF
+                </button>
+            </form>
+            <a href="/app" class="btn-sa btn-sa--ghost btn-sa--xl">↩ Analizar otro archivo</a>
+        </div>
 
     </div>
 
@@ -445,10 +460,10 @@
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script>
         (function () {
-        var datosMes = {{ ventas_mes_json|safe }};
-        var datosProd = {{ ventas_prod_json|safe }};
-        var datosTop5 = {{ top5_json|safe }};
-        var datosBottom5 = {{ bottom5_json|safe }};
+            var datosMes = {{ ventas_mes_json| safe }};
+        var datosProd = {{ ventas_prod_json| safe }};
+        var datosTop5 = {{ top5_json| safe }};
+        var datosBottom5 = {{ bottom5_json| safe }};
 
         Plotly.newPlot('grafica-top5', [{
             x: datosTop5.map(function (d) { return d.producto; }),
@@ -462,7 +477,7 @@
             yaxis: { title: 'Total ventas' },
             paper_bgcolor: 'transparent',
             plot_bgcolor: 'transparent',
-            font: { color: '#ffffff'}
+            font: { color: '#ffffff' }
         }, { responsive: true });
 
         Plotly.newPlot('grafica-bottom5', [{
@@ -477,18 +492,10 @@
             yaxis: { title: 'Total ventas' },
             paper_bgcolor: 'transparent',
             plot_bgcolor: 'transparent',
-            font: { color: '#ffffff'}
+            font: { color: '#ffffff' }
         }, { responsive: true });
 
-        function filtrarTrimestre(datos, trimestre) {
-            if (trimestre === 'all') return datos;
-            var meses = { q1: ['01', '02', '03'], q2: ['04', '05', '06'], q3: ['07', '08', '09'], q4: ['10', '11', '12'] };
-            return datos.filter(function (d) {
-                var mes = d.mes.split('-')[1];
-                return meses[trimestre].indexOf(mes) !== -1;
-            });
-        }
-
+    
         function dibujarMes(datos) {
             Plotly.newPlot('grafica-mes', [{
                 x: datos.map(function (d) { return d.mes; }),
@@ -502,7 +509,7 @@
                 yaxis: { title: 'Total ventas' },
                 paper_bgcolor: 'transparent',
                 plot_bgcolor: 'transparent',
-                font: { color: '#ffffff'}
+                font: { color: '#ffffff' }
             }, { responsive: true });
         }
 
@@ -519,27 +526,29 @@
                 yaxis: { title: 'Total ventas' },
                 paper_bgcolor: 'transparent',
                 plot_bgcolor: 'transparent',
-                font: { color: '#ffffff'}
+                font: { color: '#ffffff' }
             }, { responsive: true });
         }
 
         dibujarMes(datosMes);
         dibujarProducto(datosProd);
 
-        var datosDia = {{ ventas_dia_json|safe }};
+        var datosDia = {{ ventas_dia_json| safe }};
 
-        var ordenDias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-        datosDia.sort(function(a, b) {
+        var ordenDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+        datosDia.sort(function (a, b) {
             return ordenDias.indexOf(a.dia_semana) - ordenDias.indexOf(b.dia_semana);
         });
 
         Plotly.newPlot('grafica-dia', [{
-            x: datosDia.map(function(d) { return d.dia_semana; }),
-            y: datosDia.map(function(d) { return d.total; }),
+            x: datosDia.map(function (d) { return d.dia_semana; }),
+            y: datosDia.map(function (d) { return d.total; }),
             type: 'bar',
-            marker: { color: datosDia.map(function(d) {
-                return d.total === Math.max.apply(null, datosDia.map(function(x){ return x.total; })) ? '#2ecc71' : '#1E40AF';
-            })},
+            marker: {
+                color: datosDia.map(function (d) {
+                    return d.total === Math.max.apply(null, datosDia.map(function (x) { return x.total; })) ? '#2ecc71' : '#1E40AF';
+                })
+            },
             name: 'Ventas'
         }], {
             margin: { t: 20, r: 20, b: 60, l: 60 },
@@ -550,11 +559,32 @@
             font: { color: '#ffffff' }
         }, { responsive: true });
 
+        function filtrarDatos(datos, trimestre, mes) {
+            var meses = { q1: ['01', '02', '03'], q2: ['04', '05', '06'], q3: ['07', '08', '09'], q4: ['10', '11', '12'] };
+            return datos.filter(function (d) {
+                var m = d.mes.split('-')[1];
+                if (mes !== 'all') return m === mes;
+                if (trimestre !== 'all') return meses[trimestre].indexOf(m) !== -1;
+                return true;
+            });
+        }
+
+        function aplicarFiltros() {
+            var trimestre = document.getElementById('filtro-trimestre').value;
+            var mes = document.getElementById('filtro-mes').value;
+            dibujarMes(filtrarDatos(datosMes, trimestre, mes));
+        }
+
         document.getElementById('filtro-trimestre').addEventListener('change', function () {
-            var filtrados = filtrarTrimestre(datosMes, this.value);
-            dibujarMes(filtrados);
+            document.getElementById('filtro-mes').value = 'all';
+            aplicarFiltros();
         });
-}) ();
+
+        document.getElementById('filtro-mes').addEventListener('change', function () {
+            document.getElementById('filtro-trimestre').value = 'all';
+            aplicarFiltros();
+        });
+    }) ();
     </script>
 </body>
 
