@@ -29,7 +29,8 @@ os.makedirs(UPLOADS_DIR, exist_ok=True)
 def ruta_segura(ruta):
     ruta_abs = os.path.realpath(os.path.join(BASE_DIR, ruta))
     upload_abs = os.path.realpath(UPLOADS_DIR)
-    if not ruta_abs.startswith(upload_abs + os.sep):
+    static_abs = os.path.realpath(os.path.join(BASE_DIR, 'static'))
+    if not (ruta_abs.startswith(upload_abs + os.sep) or ruta_abs.startswith(static_abs + os.sep)):
         raise ValueError(f"Ruta no permitida: {ruta}")
     return ruta_abs
 
@@ -40,6 +41,14 @@ def landing():
 @app.route('/app')
 def index():
     return render_template('index.html')
+
+@app.route('/demo')
+def demo():
+    ruta = os.path.join(BASE_DIR, 'static', 'demo_ventas.csv')
+    df = pd.read_csv(ruta)
+    columnas = list(df.columns)
+    ruta_rel = 'static/demo_ventas.csv'
+    return render_template('mapeo.html', columnas = columnas, ruta = ruta_rel)
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -247,7 +256,8 @@ def analizar():
 
     #Borra archivo subido por privacidad
     try:
-        os.remove(ruta)
+        if 'uploads' in ruta:
+            os.remove(ruta)
     except:
         pass
 
