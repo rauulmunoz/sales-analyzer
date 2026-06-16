@@ -109,7 +109,7 @@ def analizar():
         if campo not in campos_asignados:
             return render_template('mapeo.html', 
                 columnas=list(df.columns), 
-                ruta=ruta, 
+                ruta=ruta_form, 
                 error=f'Debes asignar al menos una columna como "{campo}"')
                 
     df = df[list(columnas_utiles.keys())].rename(columns = columnas_utiles)
